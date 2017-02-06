@@ -1,0 +1,9 @@
+c:\users\estraaanged\documents\visual studio 2015\Projects\image-compression\image-compression\bin\Debug\image-compression.exe.config
+c:\users\estraaanged\documents\visual studio 2015\Projects\image-compression\image-compression\bin\Debug\image-compression.exe
+c:\users\estraaanged\documents\visual studio 2015\Projects\image-compression\image-compression\bin\Debug\image-compression.pdb
+c:\users\estraaanged\documents\visual studio 2015\Projects\image-compression\image-compression\obj\Debug\image-compression.csprojResolveAssemblyReference.cache
+c:\users\estraaanged\documents\visual studio 2015\Projects\image-compression\image-compression\obj\Debug\image_compression.Properties.Resources.resources
+c:\users\estraaanged\documents\visual studio 2015\Projects\image-compression\image-compression\obj\Debug\image-compression.csproj.GenerateResource.Cache
+c:\users\estraaanged\documents\visual studio 2015\Projects\image-compression\image-compression\obj\Debug\image-compression.exe
+c:\users\estraaanged\documents\visual studio 2015\Projects\image-compression\image-compression\obj\Debug\image-compression.pdb
+C:\Users\Estraaanged\Documents\Visual Studio 2015\Projects\image-compression\image-compression\obj\Debug\image_compression.imageCompressionForm.resources

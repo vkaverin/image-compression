@@ -34,14 +34,6 @@ public class HaarCompression
         {
             for (int j = r; j < image.Height && j < r + this.boxSize; ++j)
             {
-                //Color pix = Color.FromArgb((int) compressedBox.getR(i - l, j - r), 
-                //    (int) compressedBox.getG(i - l, j - r), 
-                //    (int) compressedBox.getB(i - l, j - r));
-
-                //Color pix = Color.FromArgb((int) compressedBox.getR(0, 0), 
-                //    (int) compressedBox.getG(0, 0), 
-                //    (int) compressedBox.getB(0, 0));
-
                 Color pix = Color.FromArgb((int)compressedBox.getRedPixel(i - l, j - r),
                     (int)compressedBox.getGreenPixel(i - l, j - r),
                     (int)compressedBox.getBluePixel(i - l, j - r));
@@ -70,30 +62,13 @@ public class HaarCompression
 
     private RGB compressColors(RGB originalRGB, int compressionRate)
     {
-        RGB res = new RGB(originalRGB);
-        //for (int i = 0; i < 8; ++i)
-        //{
-        //    for (int j = 0; j < 8; ++j)
-        //    {
-        //        double r = originalRGB.getR(i, j);
-        //        double g = originalRGB.getG(i, j);
-        //        double b = originalRGB.getB(i, j);
+        RGB compressedRGB = new RGB(originalRGB);
 
-        //        if (Math.Sqrt(r * r + g * g /*+ b * b*/) >= compressionRate)
-        //        {
-        //            res.setR(r, i, j);
-        //            res.setG(g, i, j);
-        //            res.setB(b, i, j);
-        //        }
-        //    }
-        //}
+        compressMatrixByHaar(compressedRGB.getRedPixelsMatrix(), compressionRate);
+        compressMatrixByHaar(compressedRGB.getGreenPixelsMatrix(), compressionRate);
+        compressMatrixByHaar(compressedRGB.getBluePixelsMatrix(), compressionRate);
 
-        compressMatrixByHaar(res.getRedPixelsMatrix(), compressionRate);
-        compressMatrixByHaar(res.getGreenPixelsMatrix(), compressionRate);
-        compressMatrixByHaar(res.getBluePixelsMatrix(), compressionRate);
-
-
-        return res;   
+        return compressedRGB;   
     }
 
     private double[][] compressMatrixByHaar(double[][] matrix, int compressionRate)
@@ -168,24 +143,12 @@ public class HaarCompression
 
         elements.Sort();
 
-        //for (int i = 0; i < this.boxSize; ++i)
-        //{
-        //    for (int j = 0; j < this.boxSize; ++j)
-        //    {
-        //        if (Math.Abs(matrix[i][j]) < compressionRate)
-        //        {
-        //            matrix[i][j] = 0;
-        //        }
-        //    }
-        //}
-
-        int thrown = 0;
-
-        while (thrown < elementsToThrowAway && thrown < elements.Count)
+        int thrownCount = 0;
+        while (thrownCount < elementsToThrowAway && thrownCount < elements.Count)
         {
-            Tuple<Int32, Int32> pos = elements[thrown].getPosition();
+            Tuple<Int32, Int32> pos = elements[thrownCount].getPosition();
             matrix[pos.Item1][pos.Item2] = 0;
-            ++thrown;
+            ++thrownCount;
         }
 
         return matrix;

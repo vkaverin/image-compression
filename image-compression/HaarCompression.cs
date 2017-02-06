@@ -1,17 +1,13 @@
 ﻿using System;
-using System.IO;
 using System.Drawing;
-using System.Windows.Forms;
 using System.Collections.Generic;
 
 public class HaarCompression
 {
-    int boxSize = 1;
+    private  int boxSize = 8;
 
-    public String compressImage(Image image, int ratio)
+    public Image compressImage(Image image, int ratio)
     {
-        this.boxSize = 8; // (1 << ratio);
-
         Bitmap bitmap = new Bitmap(image);
         Bitmap compressedImage = new Bitmap(bitmap.Width, bitmap.Height);
 
@@ -24,14 +20,8 @@ public class HaarCompression
                 restoreImageFromRGB(ref compressedImage, compressedBox, i, j);
             }
         }
-
-        if (!Directory.Exists(Application.StartupPath))
-        {
-            Directory.CreateDirectory(Application.StartupPath);
-        }
-        string filename = Application.StartupPath + "\\result" + DateTime.Now.ToFileTime();
-        compressedImage.Save(filename);
-        return filename;
+        
+        return compressedImage;
     }
 
     private void restoreImageFromRGB(ref Bitmap image, RGB compressedBox, int l, int r)

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace image_compression
@@ -86,18 +82,21 @@ namespace image_compression
             drawInProgressUI();
 
             int compressionRate = (int) compressionRateUpDown.Value;
-
-            if (compressionRate > 0)
-            {
-                String pathToComressedImage = new HaarCompression().compressImage(originalImageBox.Image, compressionRate);
-                Image compressedImage = Image.FromFile(pathToComressedImage);
-                compressedImageBox.Image = compressedImage;
-            } else
-            {
-                compressedImageBox.Image = originalImageBox.Image;
-            }
+            Image compressedImage = new HaarCompression().compressImage(originalImageBox.Image, compressionRate);
+            compressedImageBox.Image = compressedImage;
 
             drawNormalUI();
+        }
+
+        private static void saveImageIntoFile(Image image)
+        {
+            String storageDirectory = Application.StartupPath + "compressed";
+            if (!Directory.Exists(storageDirectory))
+            {
+                Directory.CreateDirectory(storageDirectory);
+            }
+            string filename = storageDirectory + System.IO.Path.PathSeparator + "image-" + DateTime.Now.ToFileTime();
+            image.Save(filename);
         }
 
         private void drawInProgressUI()

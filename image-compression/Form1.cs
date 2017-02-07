@@ -85,17 +85,18 @@ namespace image_compression
             Image compressedImage = new HaarCompression().compressImage(originalImageBox.Image, compressionRate);
             compressedImageBox.Image = compressedImage;
 
+            saveImageIntoFile(compressedImage)
             drawNormalUI();
         }
 
         private static void saveImageIntoFile(Image image)
         {
-            String storageDirectory = Application.StartupPath + "compressed";
+            String storageDirectory = Application.StartupPath + System.IO.Path.DirectorySeparatorChar + "compressed";
             if (!Directory.Exists(storageDirectory))
             {
                 Directory.CreateDirectory(storageDirectory);
             }
-            string filename = storageDirectory + System.IO.Path.PathSeparator + "image-" + DateTime.Now.ToFileTime();
+            string filename = storageDirectory + System.IO.Path.DirectorySeparatorChar + "image-" + DateTime.Now.ToFileTime() + ".jpg";
             image.Save(filename);
         }
 

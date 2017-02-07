@@ -23,16 +23,6 @@ namespace image_compression
             compressionRateLabel.Hide();
         }
 
-        private void groupBox2_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             if(openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -47,36 +37,6 @@ namespace image_compression
             }
         }
 
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox2_Enter_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void originalImageBox_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             drawInProgressUI();
@@ -85,7 +45,7 @@ namespace image_compression
             Image compressedImage = new HaarCompression().compressImage(originalImageBox.Image, compressionRate);
             compressedImageBox.Image = compressedImage;
 
-            saveImageIntoFile(compressedImage)
+            saveImageIntoFile(compressedImage);
             drawNormalUI();
         }
 
@@ -120,26 +80,6 @@ namespace image_compression
             compressedImageBox.Show();
             switchUI(true);
             this.Update();
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void progressBar1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click_1(object sender, EventArgs e)
-        {
-
         }
 
         private void compressionRateUpDown_KeyUp(object sender, KeyEventArgs e)

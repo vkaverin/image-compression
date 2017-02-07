@@ -55,7 +55,6 @@
             this.originalImageBox.Size = new System.Drawing.Size(481, 0);
             this.originalImageBox.TabIndex = 0;
             this.originalImageBox.TabStop = false;
-            this.originalImageBox.Click += new System.EventHandler(this.originalImageBox_Click);
             // 
             // openFileDialog1
             // 
@@ -63,7 +62,6 @@
             this.openFileDialog1.Filter = "JPEG Files (*.jpg)|*.jpg|PNG Files (*.png)|*.png|BMP Files (*.bmp)|*.bmp|All file" +
     "s (*.*)|*.* ";
             this.openFileDialog1.Title = "Image to compress";
-            this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
             // chooseImageButton
             // 
@@ -83,7 +81,6 @@
             this.originalImageFlowLayoutPanel.Name = "originalImageFlowLayoutPanel";
             this.originalImageFlowLayoutPanel.Size = new System.Drawing.Size(512, 512);
             this.originalImageFlowLayoutPanel.TabIndex = 3;
-            this.originalImageFlowLayoutPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel1_Paint);
             // 
             // compressedImageFlowLayoutPanel
             // 
@@ -140,7 +137,6 @@
             this.compressionRateLabel.Size = new System.Drawing.Size(88, 13);
             this.compressionRateLabel.TabIndex = 6;
             this.compressionRateLabel.Text = "Compression rate";
-            this.compressionRateLabel.Click += new System.EventHandler(this.label1_Click);
             // 
             // imageCompressionForm
             // 
@@ -154,7 +150,6 @@
             this.Controls.Add(this.chooseImageButton);
             this.Name = "imageCompressionForm";
             this.Text = "Image compression";
-            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.originalImageBox)).EndInit();
             this.originalImageFlowLayoutPanel.ResumeLayout(false);
             this.compressedImageFlowLayoutPanel.ResumeLayout(false);

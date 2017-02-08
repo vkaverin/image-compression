@@ -19,8 +19,9 @@ namespace image_compression
             compressedImageFlowLayoutPanel.Controls.Add(compressedImageBox);
 
             compressionInProgressLabel.Hide();
-            compressionRateUpDown.Hide();
             compressionRateLabel.Hide();
+            compressionRateUpDown.Hide();
+            qualityLabel.Hide();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -33,7 +34,7 @@ namespace image_compression
                 compressedImageBox.Hide();
 
                 compressionRateUpDown.Show();
-                compressionRateLabel.Show();
+                qualityLabel.Show();
             }
         }
 
@@ -42,11 +43,11 @@ namespace image_compression
             drawInProgressUI();
 
             int compressionRate = (int) compressionRateUpDown.Value;
-            Image compressedImage = new HaarCompression().compressImage(originalImageBox.Image, compressionRate);
-            compressedImageBox.Image = compressedImage;
+            Tuple<Image, double> compression = new HaarCompression().compressImage(originalImageBox.Image, compressionRate);
+            compressedImageBox.Image = compression.Item1;
 
-            saveImageIntoFile(compressedImage);
-            drawNormalUI();
+            saveImageIntoFile(compression.Item1);
+            drawAfterCompressionUI(compression.Item2);
         }
 
         private static void saveImageIntoFile(Image image)
@@ -65,6 +66,7 @@ namespace image_compression
             switchUI(false);
             compressedImageBox.Hide();
             compressionInProgressLabel.Show();
+            compressionRateLabel.Hide();
             this.Update();
         }
 
@@ -74,10 +76,12 @@ namespace image_compression
             chooseImageButton.Enabled = onOff;
         }
 
-        private void drawNormalUI()
+        private void drawAfterCompressionUI(double compressionRate)
         {
             compressionInProgressLabel.Hide();
             compressedImageBox.Show();
+            compressionRateLabel.Text = String.Format("Compression rate: {0:F2}", compressionRate);
+            compressionRateLabel.Show();
             switchUI(true);
             this.Update();
         }

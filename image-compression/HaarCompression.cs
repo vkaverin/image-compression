@@ -4,9 +4,11 @@ using System.Collections.Generic;
 
 public class HaarCompression
 {
-    private  int boxSize = 8;
+    private int boxSize = 8;
+    private int nonZeroOriginal = 0;
+    private int nonZeroCompressed = 0;
 
-    public Image compressImage(Image image, int ratio)
+    public Tuple<Image, double> compressImage(Image image, int ratio)
     {
         Bitmap bitmap = new Bitmap(image);
         Bitmap compressedImage = new Bitmap(bitmap.Width, bitmap.Height);
@@ -20,8 +22,10 @@ public class HaarCompression
                 restoreImageFromRGB(ref compressedImage, compressedBox, i, j);
             }
         }
-        
-        return compressedImage;
+
+        Tuple<Image, double> result = new Tuple<Image, double>(compressedImage, (double)nonZeroOriginal / nonZeroCompressed);
+
+        return result;
     }
 
     private void restoreImageFromRGB(ref Bitmap image, RGB compressedBox, int l, int r)
@@ -73,6 +77,7 @@ public class HaarCompression
 
     private double[][] compressMatrixByHaar(double[][] matrix, int compressionRate)
     {
+
         for (int i = 0; i < this.boxSize; ++i)
         {
             int columns = this.boxSize;
@@ -128,12 +133,15 @@ public class HaarCompression
 
         List<MatrixElement> elements = new List<MatrixElement>();
 
+        int nonZeroPixelsCounterOriginal = 0;
+
         for (int i = 0; i < this.boxSize; ++i)
         {
             for (int j = 0; j < this.boxSize; ++j)
             {
                 if (matrix[i][j] > 0)
                 {
+                    ++nonZeroPixelsCounterOriginal;
                     elements.Add(new MatrixElement(i, j, matrix[i][j]));
                 }
             }
@@ -150,6 +158,9 @@ public class HaarCompression
             matrix[pos.Item1][pos.Item2] = 0;
             ++thrownCount;
         }
+
+        nonZeroOriginal += nonZeroPixelsCounterOriginal;
+        nonZeroCompressed += nonZeroPixelsCounterOriginal - thrownCount;
 
         return matrix;
     }

@@ -36,6 +36,7 @@
             this.compressedImageBox = new System.Windows.Forms.PictureBox();
             this.compressionInProgressLabel = new System.Windows.Forms.Label();
             this.compressionRateUpDown = new System.Windows.Forms.NumericUpDown();
+            this.qualityLabel = new System.Windows.Forms.Label();
             this.compressionRateLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.originalImageBox)).BeginInit();
             this.originalImageFlowLayoutPanel.SuspendLayout();
@@ -129,14 +130,23 @@
             this.compressionRateUpDown.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             this.compressionRateUpDown.KeyUp += new System.Windows.Forms.KeyEventHandler(this.compressionRateUpDown_KeyUp);
             // 
+            // qualityLabel
+            // 
+            this.qualityLabel.AutoSize = true;
+            this.qualityLabel.Location = new System.Drawing.Point(600, 249);
+            this.qualityLabel.Name = "qualityLabel";
+            this.qualityLabel.Size = new System.Drawing.Size(53, 13);
+            this.qualityLabel.TabIndex = 6;
+            this.qualityLabel.Text = "Quality, %";
+            // 
             // compressionRateLabel
             // 
             this.compressionRateLabel.AutoSize = true;
-            this.compressionRateLabel.Location = new System.Drawing.Point(584, 249);
+            this.compressionRateLabel.Location = new System.Drawing.Point(567, 288);
             this.compressionRateLabel.Name = "compressionRateLabel";
-            this.compressionRateLabel.Size = new System.Drawing.Size(88, 13);
-            this.compressionRateLabel.TabIndex = 6;
-            this.compressionRateLabel.Text = "Compression rate";
+            this.compressionRateLabel.Size = new System.Drawing.Size(115, 13);
+            this.compressionRateLabel.TabIndex = 7;
+            this.compressionRateLabel.Text = "Compression rate: XXX";
             // 
             // imageCompressionForm
             // 
@@ -144,6 +154,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
             this.Controls.Add(this.compressionRateLabel);
+            this.Controls.Add(this.qualityLabel);
             this.Controls.Add(this.compressionRateUpDown);
             this.Controls.Add(this.compressedImageFlowLayoutPanel);
             this.Controls.Add(this.originalImageFlowLayoutPanel);
@@ -168,9 +179,10 @@
         private System.Windows.Forms.FlowLayoutPanel originalImageFlowLayoutPanel;
         private System.Windows.Forms.FlowLayoutPanel compressedImageFlowLayoutPanel;
         private System.Windows.Forms.NumericUpDown compressionRateUpDown;
-        private System.Windows.Forms.Label compressionRateLabel;
+        private System.Windows.Forms.Label qualityLabel;
         private System.Windows.Forms.PictureBox compressedImageBox;
         private System.Windows.Forms.Label compressionInProgressLabel;
+        private System.Windows.Forms.Label compressionRateLabel;
     }
 }
 

@@ -38,11 +38,14 @@
             this.compressionRateUpDown = new System.Windows.Forms.NumericUpDown();
             this.qualityLabel = new System.Windows.Forms.Label();
             this.compressionRateLabel = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.originalImageBox)).BeginInit();
             this.originalImageFlowLayoutPanel.SuspendLayout();
             this.compressedImageFlowLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.compressedImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.compressionRateUpDown)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // originalImageBox
@@ -66,7 +69,7 @@
             // 
             // chooseImageButton
             // 
-            this.chooseImageButton.Location = new System.Drawing.Point(843, 550);
+            this.chooseImageButton.Location = new System.Drawing.Point(879, 596);
             this.chooseImageButton.Name = "chooseImageButton";
             this.chooseImageButton.Size = new System.Drawing.Size(254, 23);
             this.chooseImageButton.TabIndex = 2;
@@ -78,7 +81,7 @@
             // 
             this.originalImageFlowLayoutPanel.AutoScroll = true;
             this.originalImageFlowLayoutPanel.Controls.Add(this.originalImageBox);
-            this.originalImageFlowLayoutPanel.Location = new System.Drawing.Point(38, 12);
+            this.originalImageFlowLayoutPanel.Location = new System.Drawing.Point(14, 19);
             this.originalImageFlowLayoutPanel.Name = "originalImageFlowLayoutPanel";
             this.originalImageFlowLayoutPanel.Size = new System.Drawing.Size(512, 512);
             this.originalImageFlowLayoutPanel.TabIndex = 3;
@@ -88,7 +91,7 @@
             this.compressedImageFlowLayoutPanel.AutoScroll = true;
             this.compressedImageFlowLayoutPanel.Controls.Add(this.compressedImageBox);
             this.compressedImageFlowLayoutPanel.Controls.Add(this.compressionInProgressLabel);
-            this.compressedImageFlowLayoutPanel.Location = new System.Drawing.Point(708, 12);
+            this.compressedImageFlowLayoutPanel.Location = new System.Drawing.Point(726, 34);
             this.compressedImageFlowLayoutPanel.Name = "compressedImageFlowLayoutPanel";
             this.compressedImageFlowLayoutPanel.Size = new System.Drawing.Size(512, 512);
             this.compressedImageFlowLayoutPanel.TabIndex = 4;
@@ -113,7 +116,7 @@
             // 
             // compressionRateUpDown
             // 
-            this.compressionRateUpDown.Location = new System.Drawing.Point(570, 265);
+            this.compressionRateUpDown.Location = new System.Drawing.Point(584, 265);
             this.compressionRateUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -123,7 +126,7 @@
             this.compressionRateUpDown.Size = new System.Drawing.Size(120, 20);
             this.compressionRateUpDown.TabIndex = 5;
             this.compressionRateUpDown.Value = new decimal(new int[] {
-            1,
+            100,
             0,
             0,
             0});
@@ -142,22 +145,42 @@
             // compressionRateLabel
             // 
             this.compressionRateLabel.AutoSize = true;
-            this.compressionRateLabel.Location = new System.Drawing.Point(567, 288);
+            this.compressionRateLabel.Location = new System.Drawing.Point(584, 288);
             this.compressionRateLabel.Name = "compressionRateLabel";
             this.compressionRateLabel.Size = new System.Drawing.Size(115, 13);
             this.compressionRateLabel.TabIndex = 7;
             this.compressionRateLabel.Text = "Compression rate: XXX";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.originalImageFlowLayoutPanel);
+            this.groupBox1.Location = new System.Drawing.Point(38, 15);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(540, 543);
+            this.groupBox1.TabIndex = 8;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Original image";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Location = new System.Drawing.Point(710, 15);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(542, 543);
+            this.groupBox2.TabIndex = 9;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Compressed image";
             // 
             // imageCompressionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.compressedImageFlowLayoutPanel);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.compressionRateLabel);
             this.Controls.Add(this.qualityLabel);
             this.Controls.Add(this.compressionRateUpDown);
-            this.Controls.Add(this.compressedImageFlowLayoutPanel);
-            this.Controls.Add(this.originalImageFlowLayoutPanel);
             this.Controls.Add(this.chooseImageButton);
             this.Name = "imageCompressionForm";
             this.Text = "Image compression";
@@ -167,6 +190,7 @@
             this.compressedImageFlowLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.compressedImageBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.compressionRateUpDown)).EndInit();
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,6 +207,8 @@
         private System.Windows.Forms.PictureBox compressedImageBox;
         private System.Windows.Forms.Label compressionInProgressLabel;
         private System.Windows.Forms.Label compressionRateLabel;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }
 

@@ -1,6 +1,6 @@
 ﻿namespace image_compression
 {
-    partial class imageCompressionForm
+    partial class ImageCompressionForm
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -40,6 +40,10 @@
             this.compressionRateLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.nonZeroBeforeTextLabel = new System.Windows.Forms.Label();
+            this.nonZeroBeforeValueLabel = new System.Windows.Forms.Label();
+            this.nonZeroAfterTextLabel = new System.Windows.Forms.Label();
+            this.nonZeroAfterValueLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.originalImageBox)).BeginInit();
             this.originalImageFlowLayoutPanel.SuspendLayout();
             this.compressedImageFlowLayoutPanel.SuspendLayout();
@@ -63,8 +67,7 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "JPEG Files (*.jpg)|*.jpg|PNG Files (*.png)|*.png|BMP Files (*.bmp)|*.bmp|All file" +
-    "s (*.*)|*.* ";
+            this.openFileDialog1.Filter = "JPEG Files (*.jpg)|*.jpg|PNG Files (*.png)|*.png|BMP Files (*.bmp)|*.bmp";
             this.openFileDialog1.Title = "Image to compress";
             // 
             // chooseImageButton
@@ -170,11 +173,51 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Compressed image";
             // 
-            // imageCompressionForm
+            // nonZeroBeforeTextLabel
+            // 
+            this.nonZeroBeforeTextLabel.AutoSize = true;
+            this.nonZeroBeforeTextLabel.Location = new System.Drawing.Point(587, 314);
+            this.nonZeroBeforeTextLabel.Name = "nonZeroBeforeTextLabel";
+            this.nonZeroBeforeTextLabel.Size = new System.Drawing.Size(86, 13);
+            this.nonZeroBeforeTextLabel.TabIndex = 10;
+            this.nonZeroBeforeTextLabel.Text = "Non-zero before:";
+            // 
+            // nonZeroBeforeValueLabel
+            // 
+            this.nonZeroBeforeValueLabel.AutoSize = true;
+            this.nonZeroBeforeValueLabel.Location = new System.Drawing.Point(590, 338);
+            this.nonZeroBeforeValueLabel.Name = "nonZeroBeforeValueLabel";
+            this.nonZeroBeforeValueLabel.Size = new System.Drawing.Size(88, 13);
+            this.nonZeroBeforeValueLabel.TabIndex = 11;
+            this.nonZeroBeforeValueLabel.Text = "#non-zero-before";
+            // 
+            // nonZeroAfterTextLabel
+            // 
+            this.nonZeroAfterTextLabel.AutoSize = true;
+            this.nonZeroAfterTextLabel.Location = new System.Drawing.Point(587, 368);
+            this.nonZeroAfterTextLabel.Name = "nonZeroAfterTextLabel";
+            this.nonZeroAfterTextLabel.Size = new System.Drawing.Size(77, 13);
+            this.nonZeroAfterTextLabel.TabIndex = 12;
+            this.nonZeroAfterTextLabel.Text = "Non-zero after:";
+            // 
+            // nonZeroAfterValueLabel
+            // 
+            this.nonZeroAfterValueLabel.AutoSize = true;
+            this.nonZeroAfterValueLabel.Location = new System.Drawing.Point(590, 396);
+            this.nonZeroAfterValueLabel.Name = "nonZeroAfterValueLabel";
+            this.nonZeroAfterValueLabel.Size = new System.Drawing.Size(79, 13);
+            this.nonZeroAfterValueLabel.TabIndex = 13;
+            this.nonZeroAfterValueLabel.Text = "#non-zero-after";
+            // 
+            // ImageCompressionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.nonZeroAfterValueLabel);
+            this.Controls.Add(this.nonZeroAfterTextLabel);
+            this.Controls.Add(this.nonZeroBeforeValueLabel);
+            this.Controls.Add(this.nonZeroBeforeTextLabel);
             this.Controls.Add(this.compressedImageFlowLayoutPanel);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -182,7 +225,7 @@
             this.Controls.Add(this.qualityLabel);
             this.Controls.Add(this.compressionRateUpDown);
             this.Controls.Add(this.chooseImageButton);
-            this.Name = "imageCompressionForm";
+            this.Name = "ImageCompressionForm";
             this.Text = "Image compression";
             ((System.ComponentModel.ISupportInitialize)(this.originalImageBox)).EndInit();
             this.originalImageFlowLayoutPanel.ResumeLayout(false);
@@ -209,6 +252,10 @@
         private System.Windows.Forms.Label compressionRateLabel;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label nonZeroBeforeTextLabel;
+        private System.Windows.Forms.Label nonZeroBeforeValueLabel;
+        private System.Windows.Forms.Label nonZeroAfterTextLabel;
+        private System.Windows.Forms.Label nonZeroAfterValueLabel;
     }
 }
 

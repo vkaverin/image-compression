@@ -16,7 +16,7 @@ namespace image_compression
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new imageCompressionForm());
+            Application.Run(new ImageCompressionForm());
         }
     }
 }

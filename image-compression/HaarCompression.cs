@@ -4,84 +4,97 @@ using System.Collections.Generic;
 
 public class HaarCompression
 {
-    private int boxSize = 8;
+    private const int boxSize = 8;
     private int nonZeroOriginal = 0;
     private int nonZeroCompressed = 0;
 
-    public Tuple<Image, double> compressImage(Image image, int ratio)
-    {
-        Bitmap bitmap = new Bitmap(image);
-        Bitmap compressedImage = new Bitmap(bitmap.Width, bitmap.Height);
+    private CompressionInfo compressionInfo = new CompressionInfo();
 
-        for (int i = 0; i < image.Width; i += this.boxSize)
+    private int qualityPercent;
+
+    public HaarCompression(int qualityPercent)
+    {
+        this.qualityPercent = qualityPercent;
+    }
+
+    public CompressionInfo compressImage(Image image)
+    {
+        Bitmap source = new Bitmap(image);
+        Bitmap target = new Bitmap(source.Width, source.Height);
+
+        for (int i = 0; i < image.Width; i += HaarCompression.boxSize)
         {
-            for (int j = 0; j < image.Height; j += this.boxSize)
+            for (int j = 0; j < image.Height; j += HaarCompression.boxSize)
             {
-                RGB box = getNextBox(bitmap, i, j);
-                RGB compressedBox = compressColors(box, ratio);
-                restoreImageFromRGB(ref compressedImage, compressedBox, i, j);
+                RGBBox box = getNextBox(source, i, j);
+                RGBBox compressedBox = compress(box);
+                restoreImage(ref target, compressedBox, i, j);
             }
         }
 
-        Tuple<Image, double> result = new Tuple<Image, double>(compressedImage, (double)nonZeroOriginal / nonZeroCompressed);
-
-        return result;
+        CompressionInfo compressionInfo = new CompressionInfo();
+        compressionInfo.Source = source;
+        compressionInfo.Target = target;
+        compressionInfo.Quality = this.qualityPercent;
+        compressionInfo.SourceNonZero = nonZeroOriginal;
+        compressionInfo.CompressedNonZero = nonZeroCompressed;
+        
+        return compressionInfo;
     }
 
-    private void restoreImageFromRGB(ref Bitmap image, RGB compressedBox, int l, int r)
+    private void restoreImage(ref Bitmap image, RGBBox source, int l, int r)
     {
-        restoreMatrix(compressedBox.getRedPixelsMatrix());
-        restoreMatrix(compressedBox.getGreenPixelsMatrix());
-        restoreMatrix(compressedBox.getBluePixelsMatrix());
+        double[][] red = restoreMatrix(source.getRedPixelsMatrix());
+        double[][] green = restoreMatrix(source.getGreenPixelsMatrix());
+        double[][] blue = restoreMatrix(source.getBluePixelsMatrix());
 
-        for (int i = l; i < image.Width && i < l + this.boxSize; ++i)
+        RGBBox restored = new RGBBox(red, green, blue);
+
+        for (int i = l, boxLeftStart = 0; i < image.Width && i < l + HaarCompression.boxSize; ++i, ++boxLeftStart)
         {
-            for (int j = r; j < image.Height && j < r + this.boxSize; ++j)
+            for (int j = r, boxTopStart = 0; j < image.Height && j < r + HaarCompression.boxSize; ++j, ++boxTopStart)
             {
-                Color pix = Color.FromArgb((int)compressedBox.getRedPixel(i - l, j - r),
-                    (int)compressedBox.getGreenPixel(i - l, j - r),
-                    (int)compressedBox.getBluePixel(i - l, j - r));
-
-                image.SetPixel(i, j, pix);
+                image.SetPixel(i, j, restored.getColor(boxLeftStart, boxTopStart));
             }
         }
     }
 
-    private RGB getNextBox(Bitmap image, int l, int r)
+    private RGBBox getNextBox(Bitmap source, int startLeftIndex, int startTopIndex)
     {
-        RGB box = new RGB(this.boxSize);
-        for (int i = l; i < image.Width && i < l + this.boxSize; ++i)
+        RGBBox box = new RGBBox(HaarCompression.boxSize);
+        for (int i = startLeftIndex, boxHorizontalPosition = 0; i < source.Width && i < (startLeftIndex + HaarCompression.boxSize); ++i, ++boxHorizontalPosition)
         {
-            for (int j = r; j < image.Height && j < r + this.boxSize; ++j)
+            for (int j = startTopIndex, boxVerticalPosition = 0; j < source.Height && j < (startTopIndex + HaarCompression.boxSize); ++j, ++boxVerticalPosition)
             {
-                Color pix = image.GetPixel(i, j);
-                box.setRedPixel(pix.R, i - l, j - r);
-                box.setGreenPixel(pix.G, i - l, j - r);
-                box.setBluePixel(pix.B, i - l, j - r);
+                box.setPixel(source.GetPixel(i, j), boxHorizontalPosition, boxVerticalPosition);
             }
         }
 
         return box;
     }
 
-    private RGB compressColors(RGB originalRGB, int compressionRate)
+    private RGBBox compress(RGBBox source)
     {
-        RGB compressedRGB = new RGB(originalRGB);
+        double[][] red = haarCompression(source.getRedPixelsMatrix());
+        double[][] green = haarCompression(source.getGreenPixelsMatrix());
+        double[][] blue = haarCompression(source.getBluePixelsMatrix());
 
-        compressMatrixByHaar(compressedRGB.getRedPixelsMatrix(), compressionRate);
-        compressMatrixByHaar(compressedRGB.getGreenPixelsMatrix(), compressionRate);
-        compressMatrixByHaar(compressedRGB.getBluePixelsMatrix(), compressionRate);
-
-        return compressedRGB;   
+        return new RGBBox(red, green, blue);   
     }
 
-    private double[][] compressMatrixByHaar(double[][] matrix, int compressionRate)
+    private double[][] haarCompression(double[][] source)
     {
-
-        for (int i = 0; i < this.boxSize; ++i)
+        double[][] matrix = new double[source.Length][];
+        for (int i = 0; i < source.Length; ++i)
         {
-            int columns = this.boxSize;
-            double[] temp = new double[this.boxSize];
+            matrix[i] = new double[source[i].Length];
+            source[i].CopyTo(matrix[i], 0);
+        }
+
+        for (int i = 0; i < HaarCompression.boxSize; ++i)
+        {
+            int columns = HaarCompression.boxSize;
+            double[] temp = new double[HaarCompression.boxSize];
 
             while (columns > 0)
             {
@@ -96,7 +109,7 @@ public class HaarCompression
                     temp[k] = (matrix[i][2 * j] - matrix[i][2 * j + 1]) / 2;
                 }
 
-                for (int j = 0; j < this.boxSize; ++j)
+                for (int j = 0; j < HaarCompression.boxSize; ++j)
                 {
                     matrix[i][j] = temp[j];
                 }
@@ -105,10 +118,10 @@ public class HaarCompression
             }
         }
 
-        for (int i = 0; i < this.boxSize; ++i)
+        for (int i = 0; i < HaarCompression.boxSize; ++i)
         {
-            int rows = this.boxSize;
-            double[] temp = new double[this.boxSize];
+            int rows = HaarCompression.boxSize;
+            double[] temp = new double[HaarCompression.boxSize];
             while (rows > 0)
             {
                 for (int j = 0; j < rows / 2; ++j)
@@ -122,7 +135,7 @@ public class HaarCompression
                     temp[k] = (matrix[2 * j][i] - matrix[2 * j + 1][i]) / 2;
                 }
 
-                for (int j = 0; j < this.boxSize; ++j)
+                for (int j = 0; j < HaarCompression.boxSize; ++j)
                 {
                     matrix[j][i] = temp[j];
                 }
@@ -135,11 +148,11 @@ public class HaarCompression
 
         int nonZeroPixelsCounterOriginal = 0;
 
-        for (int i = 0; i < this.boxSize; ++i)
+        for (int i = 0; i < HaarCompression.boxSize; ++i)
         {
-            for (int j = 0; j < this.boxSize; ++j)
+            for (int j = 0; j < HaarCompression.boxSize; ++j)
             {
-                if (matrix[i][j] > 0)
+                if (Math.Abs(matrix[i][j]) > 0)
                 {
                     ++nonZeroPixelsCounterOriginal;
                     elements.Add(new MatrixElement(i, j, matrix[i][j]));
@@ -147,7 +160,8 @@ public class HaarCompression
             }
         }
 
-        int elementsToThrowAway = (int) ((elements.Count / 100.0) * (100 - compressionRate));
+        int percentToThrowAway = (100 - qualityPercent);
+        int elementsToThrowAway = (int) ((elements.Count / 100.0) * (percentToThrowAway));
 
         elements.Sort();
 
@@ -192,15 +206,22 @@ public class HaarCompression
         }
     }
 
-    private double[][] restoreMatrix(double[][] matrix)
+    private double[][] restoreMatrix(double[][] source)
     {
-        for (int i = 0; i < this.boxSize; ++i)
+        double[][] matrix = new double[source.Length][];
+        for (int i = 0; i < source.Length; ++i)
+        {
+            matrix[i] = new double[source[i].Length];
+            source[i].CopyTo(matrix[i], 0);
+        }
+
+        for (int i = 0; i < HaarCompression.boxSize; ++i)
         {
             int columns = 1;
-            double[] temp = new double[this.boxSize];
-            while (columns * 2 <= this.boxSize)
+            double[] temp = new double[HaarCompression.boxSize];
+            while (columns * 2 <= HaarCompression.boxSize)
             {
-                for (int j = 0; j < this.boxSize; ++j)
+                for (int j = 0; j < HaarCompression.boxSize; ++j)
                 {
                     temp[j] = matrix[i][j];
                 }
@@ -209,28 +230,19 @@ public class HaarCompression
                 {
                     matrix[i][2 * j] = temp[j] + temp[j + columns];
                     matrix[i][2 * j + 1] = temp[j] - temp[j + columns];
-
-                    if (matrix[i][2 * j] > 255)
-                    {
-                        matrix[i][2 * j] = 255;
-                    }
-                    if (matrix[i][2 * j + 1] > 255)
-                    {
-                        matrix[i][2 * j + 1] = 255;
-                    }
                 }
 
                 columns *= 2;
             }
         }
 
-        for (int i = 0; i < this.boxSize; ++i)
+        for (int i = 0; i < HaarCompression.boxSize; ++i)
         {
             int rows = 1;
-            double[] temp = new double[this.boxSize];
-            while (rows * 2 <= this.boxSize)
+            double[] temp = new double[HaarCompression.boxSize];
+            while (rows * 2 <= HaarCompression.boxSize)
             {
-                for (int j = 0; j < this.boxSize; ++j)
+                for (int j = 0; j < HaarCompression.boxSize; ++j)
                 {
                     temp[j] = matrix[j][i];
                 }
@@ -239,15 +251,7 @@ public class HaarCompression
                 {
                     matrix[2 * j][i] = temp[j] + temp[j + rows];
                     matrix[2 * j + 1][i] = temp[j] - temp[j + rows];
-
-                    if (matrix[2 * j][i] > 255)
-                    {
-                        matrix[2 * j][i] = 255;
-                    }
-                    if (matrix[2 * j + 1][i] > 255)
-                    {
-                        matrix[2 * j + 1][i] = 255;
-                    }
+                    
                 }
 
 
@@ -258,7 +262,7 @@ public class HaarCompression
         return matrix;
     }
 
-    private class RGB
+    private class RGBBox
     {
         private double[][] red;
         private double[][] green;
@@ -266,33 +270,47 @@ public class HaarCompression
 
         private int boxSize = 1;
 
-        public RGB(int boxSize)
+        public RGBBox(int boxSize)
         {
             this.boxSize = boxSize;
 
-            this.red = new double[this.boxSize][];
-            this.green = new double[this.boxSize][];
-            this.blue = new double[this.boxSize][];
+            this.red = new double[HaarCompression.boxSize][];
+            this.green = new double[HaarCompression.boxSize][];
+            this.blue = new double[HaarCompression.boxSize][];
 
-            for (int i = 0; i < this.boxSize; ++i)
+            for (int i = 0; i < HaarCompression.boxSize; ++i)
             {
-                this.red[i] = new double[this.boxSize];
-                this.green[i] = new double[this.boxSize];
-                this.blue[i] = new double[this.boxSize];
+                this.red[i] = new double[HaarCompression.boxSize];
+                this.green[i] = new double[HaarCompression.boxSize];
+                this.blue[i] = new double[HaarCompression.boxSize];
             }
         }
 
-        public RGB(RGB copy) : this(copy.boxSize)
+        public RGBBox(RGBBox copy) : this(copy.boxSize)
         {
-            for (int i = 0; i < this.boxSize; ++i)
+            for (int i = 0; i < HaarCompression.boxSize; ++i)
             {
-                for (int j = 0; j < this.boxSize; ++j)
+                for (int j = 0; j < HaarCompression.boxSize; ++j)
                 {
                     this.red[i][j] = copy.getRedPixel(i, j);
                     this.green[i][j] = copy.getGreenPixel(i, j);
                     this.blue[i][j] = copy.getBluePixel(i, j);
                 }
             }
+        }
+
+        public RGBBox(double[][] red, double[][] green, double[][] blue)
+        {
+            this.red = red;
+            this.green = green;
+            this.blue = blue;
+        }
+
+        public void setPixel(Color pixel, int x, int y)
+        {
+            this.red[x][y] = pixel.R;
+            this.green[x][y] = pixel.G;
+            this.blue[x][y] = pixel.B;
         }
 
         public void setRedPixel(double value, int i, int j)
@@ -355,7 +373,15 @@ public class HaarCompression
 
         public int getBoxSize()
         {
-            return this.boxSize;
+            return HaarCompression.boxSize;
+        }
+
+        public Color getColor(int i, int j)
+        {
+            int normalizedRed = Math.Max(Math.Min((int)red[i][j], 255), 0);
+            int normalizedGreen = Math.Max(Math.Min((int)green[i][j], 255), 0);
+            int normalizedBlue = Math.Max(Math.Min((int)blue[i][j], 255), 0);
+            return Color.FromArgb(normalizedRed, normalizedGreen, normalizedBlue);
         }
     }
 }

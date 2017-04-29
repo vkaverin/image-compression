@@ -6,9 +6,9 @@ using System.Windows.Forms;
 
 namespace image_compression
 {
-    public partial class imageCompressionForm : Form
+    public partial class ImageCompressionForm : Form
     {
-        public imageCompressionForm()
+        public ImageCompressionForm()
         {
             InitializeComponent();
 
@@ -18,10 +18,23 @@ namespace image_compression
             compressedImageBox.SizeMode = PictureBoxSizeMode.AutoSize;
             compressedImageFlowLayoutPanel.Controls.Add(compressedImageBox);
 
-            compressionInProgressLabel.Hide();
-            compressionRateLabel.Hide();
+            hideLabels(compressionInProgressLabel,
+            compressionRateLabel,
+            nonZeroBeforeTextLabel,
+            nonZeroBeforeValueLabel,
+            nonZeroAfterTextLabel,
+            nonZeroAfterValueLabel,
+            qualityLabel);
+            
             compressionRateUpDown.Hide();
-            qualityLabel.Hide();
+        }
+
+        private void hideLabels(params Label[] labels)
+        {
+            foreach (Label label in labels)
+            {
+                label.Hide();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -33,6 +46,11 @@ namespace image_compression
                 originalImageBox.Image = originalImage;
                 compressedImageBox.Hide();
 
+                hideLabels(nonZeroBeforeTextLabel,
+                    nonZeroBeforeValueLabel,
+                    nonZeroAfterTextLabel,
+                    nonZeroAfterValueLabel);
+
                 compressionRateUpDown.Show();
                 qualityLabel.Show();
             }
@@ -42,12 +60,12 @@ namespace image_compression
         {
             drawInProgressUI();
 
-            int compressionRate = (int) compressionRateUpDown.Value;
-            Tuple<Image, double> compression = new HaarCompression().compressImage(originalImageBox.Image, compressionRate);
-            compressedImageBox.Image = compression.Item1;
+            int quality = (int) compressionRateUpDown.Value;
+            CompressionInfo compressionInfo = new HaarCompression(quality).compressImage(originalImageBox.Image);
+            compressedImageBox.Image = compressionInfo.Target;
 
-            saveImageIntoFile(compression.Item1);
-            drawAfterCompressionUI(compression.Item2);
+            saveImageIntoFile(compressionInfo.Target);
+            drawAfterCompressionUI(compressionInfo);
         }
 
         private static void saveImageIntoFile(Image image)
@@ -66,7 +84,13 @@ namespace image_compression
             switchUI(false);
             compressedImageBox.Hide();
             compressionInProgressLabel.Show();
-            compressionRateLabel.Hide();
+
+            hideLabels(compressionRateLabel,
+            nonZeroBeforeTextLabel,
+            nonZeroBeforeValueLabel,
+            nonZeroAfterTextLabel,
+            nonZeroAfterValueLabel);
+
             this.Update();
         }
 
@@ -76,12 +100,19 @@ namespace image_compression
             chooseImageButton.Enabled = onOff;
         }
 
-        private void drawAfterCompressionUI(double compressionRate)
+        private void drawAfterCompressionUI(CompressionInfo compressionInfo)
         {
             compressionInProgressLabel.Hide();
             compressedImageBox.Show();
-            compressionRateLabel.Text = String.Format("Compression rate: {0:F2}", compressionRate);
+            compressionRateLabel.Text = String.Format("Compression rate: {0:F2}", compressionInfo.getRatio());
             compressionRateLabel.Show();
+            nonZeroBeforeTextLabel.Show();
+            nonZeroBeforeValueLabel.Text = compressionInfo.SourceNonZero.ToString();
+            nonZeroBeforeValueLabel.Show();
+            nonZeroAfterTextLabel.Show();
+            nonZeroAfterValueLabel.Text = compressionInfo.CompressedNonZero.ToString();
+            nonZeroAfterValueLabel.Show();
+
             switchUI(true);
             this.Update();
         }

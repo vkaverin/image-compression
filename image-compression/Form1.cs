@@ -46,7 +46,8 @@ namespace image_compression
                 originalImageBox.Image = originalImage;
                 compressedImageBox.Hide();
 
-                hideLabels(nonZeroBeforeTextLabel,
+                hideLabels(compressionRateLabel, 
+                    nonZeroBeforeTextLabel,
                     nonZeroBeforeValueLabel,
                     nonZeroAfterTextLabel,
                     nonZeroAfterValueLabel);

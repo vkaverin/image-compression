@@ -197,7 +197,7 @@ public class HaarCompression
                 return 0;
             }
 
-            return this.value < other.value ? -1 : 1;
+            return Math.Abs(this.value) < Math.Abs(other.value) ? -1 : 1;
         }
 
         public Tuple<Int32, Int32> getPosition()

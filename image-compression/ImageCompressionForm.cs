@@ -32,6 +32,7 @@ namespace image_compression
 
             // Buttons & Co
             compressionRateUpDown.Hide();
+            goWorkButton.Hide();
         }
 
         private void openNewImage_button(object sender, EventArgs e)
@@ -55,6 +56,7 @@ namespace image_compression
             nonZeroAfterValueLabel.Hide();
 
             compressionRateUpDown.Show();
+            goWorkButton.Show();
             qualityLabel.Show();
         }
 
@@ -72,6 +74,7 @@ namespace image_compression
         private void inProgressUIView()
         {
             compressionRateUpDown.Enabled = false;
+            goWorkButton.Enabled = false;
             chooseImageButton.Enabled = false;
 
             compressedImageBox.Hide();
@@ -100,6 +103,7 @@ namespace image_compression
             nonZeroAfterValueLabel.Show();
 
             compressionRateUpDown.Enabled = true;
+            goWorkButton.Enabled = true;
             chooseImageButton.Enabled = true;
             this.Update();
         }

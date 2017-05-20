@@ -22,6 +22,9 @@ namespace image_compression
             compressedImageFlowLayoutPanel.Controls.Add(compressedImageBox);
 
             // Labels
+            redChannelLabel.Hide();
+            greenChannelLabel.Hide();
+            blueChannelLabel.Hide();
             compressionInProgressLabel.Hide();
             compressionRateLabel.Hide();
             nonZeroBeforeTextLabel.Hide();
@@ -31,7 +34,9 @@ namespace image_compression
             qualityLabel.Hide();
 
             // Buttons & Co
-            compressionRateUpDown.Hide();
+            redChannelQualityUpDown.Hide();
+            greenChannelQualityUpDown.Hide();
+            blueChannelQualityUpDown.Hide();
             goWorkButton.Hide();
         }
 
@@ -55,7 +60,13 @@ namespace image_compression
             nonZeroAfterTextLabel.Hide();
             nonZeroAfterValueLabel.Hide();
 
-            compressionRateUpDown.Show();
+            redChannelLabel.Show();
+            redChannelQualityUpDown.Show();
+            greenChannelLabel.Show();
+            greenChannelQualityUpDown.Show();
+            blueChannelLabel.Show();
+            blueChannelQualityUpDown.Show();
+
             goWorkButton.Show();
             qualityLabel.Show();
         }
@@ -73,7 +84,9 @@ namespace image_compression
 
         private void inProgressUIView()
         {
-            compressionRateUpDown.Enabled = false;
+            redChannelQualityUpDown.Enabled = false;
+            greenChannelQualityUpDown.Enabled = false;
+            blueChannelQualityUpDown.Enabled = false;
             goWorkButton.Enabled = false;
             chooseImageButton.Enabled = false;
 
@@ -89,20 +102,22 @@ namespace image_compression
             this.Update();
         }
 
-        private void compressionCompletedUIView(CompressionInfo compressionInfo)
+        private void compressionCompletedUIView(CompressionDetails compressionInfo)
         {
             compressionInProgressLabel.Hide();
             compressedImageBox.Show();
             compressionRateLabel.Text = String.Format("Compression rate: {0:F2}", compressionInfo.getRatio());
             compressionRateLabel.Show();
             nonZeroBeforeTextLabel.Show();
-            nonZeroBeforeValueLabel.Text = compressionInfo.SourceNonZero.ToString();
+            nonZeroBeforeValueLabel.Text = compressionInfo.SourceImageNonZeroPixelsCount.ToString();
             nonZeroBeforeValueLabel.Show();
             nonZeroAfterTextLabel.Show();
-            nonZeroAfterValueLabel.Text = compressionInfo.CompressedNonZero.ToString();
+            nonZeroAfterValueLabel.Text = compressionInfo.CompressedImageNonZeroPixelsCount.ToString();
             nonZeroAfterValueLabel.Show();
 
-            compressionRateUpDown.Enabled = true;
+            redChannelQualityUpDown.Enabled = true;
+            greenChannelQualityUpDown.Enabled = true;
+            blueChannelQualityUpDown.Enabled = true;
             goWorkButton.Enabled = true;
             chooseImageButton.Enabled = true;
             this.Update();
@@ -120,12 +135,19 @@ namespace image_compression
         {
             inProgressUIView();
 
-            int quality = (int) compressionRateUpDown.Value;
-            CompressionInfo compressionInfo = new HaarCompression(quality).compressImage(originalImageBox.Image);
-            compressedImageBox.Image = compressionInfo.Target;
+            int redQuality = (int) redChannelQualityUpDown.Value;
+            int greenQuality = (int) greenChannelQualityUpDown.Value;
+            int blueQuality = (int) blueChannelQualityUpDown.Value;
+            HaarCompression compression = HaarCompression.compress(originalImageBox.Image)
+                .withRedQuality(redQuality)
+                .withGreenQuality(greenQuality)
+                .withBlueQuality(blueQuality)
+                .build();
+            CompressionDetails compressionDetails = compression.process();
+            compressedImageBox.Image = compressionDetails.CompressedImage;
 
-            saveToFile(compressionInfo.Target);
-            compressionCompletedUIView(compressionInfo);
+            saveToFile(compressionDetails.CompressedImage);
+            compressionCompletedUIView(compressionDetails);
         }
     }
 }

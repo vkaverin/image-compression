@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompressionInfo.cs" />
+    <Compile Include="CompressionProcessBuilder.cs" />
     <Compile Include="HaarCompression.cs" />
     <Compile Include="ImageCompressionForm.cs">
       <SubType>Form</SubType>

@@ -35,7 +35,7 @@
             this.compressedImageFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.compressedImageBox = new System.Windows.Forms.PictureBox();
             this.compressionInProgressLabel = new System.Windows.Forms.Label();
-            this.compressionRateUpDown = new System.Windows.Forms.NumericUpDown();
+            this.blueChannelQualityUpDown = new System.Windows.Forms.NumericUpDown();
             this.qualityLabel = new System.Windows.Forms.Label();
             this.compressionRateLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -45,12 +45,19 @@
             this.nonZeroAfterTextLabel = new System.Windows.Forms.Label();
             this.nonZeroAfterValueLabel = new System.Windows.Forms.Label();
             this.goWorkButton = new System.Windows.Forms.Button();
+            this.greenChannelQualityUpDown = new System.Windows.Forms.NumericUpDown();
+            this.redChannelQualityUpDown = new System.Windows.Forms.NumericUpDown();
+            this.redChannelLabel = new System.Windows.Forms.Label();
+            this.greenChannelLabel = new System.Windows.Forms.Label();
+            this.blueChannelLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.originalImageBox)).BeginInit();
             this.originalImageFlowLayoutPanel.SuspendLayout();
             this.compressedImageFlowLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.compressedImageBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.compressionRateUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.blueChannelQualityUpDown)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.greenChannelQualityUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.redChannelQualityUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // originalImageBox
@@ -118,28 +125,28 @@
             this.compressionInProgressLabel.TabIndex = 7;
             this.compressionInProgressLabel.Text = "Compressing ...";
             // 
-            // compressionRateUpDown
+            // blueChannelQualityUpDown
             // 
-            this.compressionRateUpDown.Location = new System.Drawing.Point(584, 237);
-            this.compressionRateUpDown.Minimum = new decimal(new int[] {
+            this.blueChannelQualityUpDown.Location = new System.Drawing.Point(632, 237);
+            this.blueChannelQualityUpDown.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.compressionRateUpDown.Name = "compressionRateUpDown";
-            this.compressionRateUpDown.Size = new System.Drawing.Size(120, 20);
-            this.compressionRateUpDown.TabIndex = 5;
-            this.compressionRateUpDown.Value = new decimal(new int[] {
+            this.blueChannelQualityUpDown.Name = "blueChannelQualityUpDown";
+            this.blueChannelQualityUpDown.Size = new System.Drawing.Size(72, 20);
+            this.blueChannelQualityUpDown.TabIndex = 5;
+            this.blueChannelQualityUpDown.Value = new decimal(new int[] {
             100,
             0,
             0,
             0});
-            this.compressionRateUpDown.KeyUp += new System.Windows.Forms.KeyEventHandler(this.qualityUpDown_KeyUp);
+            this.blueChannelQualityUpDown.KeyUp += new System.Windows.Forms.KeyEventHandler(this.qualityUpDown_KeyUp);
             // 
             // qualityLabel
             // 
             this.qualityLabel.AutoSize = true;
-            this.qualityLabel.Location = new System.Drawing.Point(611, 221);
+            this.qualityLabel.Location = new System.Drawing.Point(616, 160);
             this.qualityLabel.Name = "qualityLabel";
             this.qualityLabel.Size = new System.Drawing.Size(53, 13);
             this.qualityLabel.TabIndex = 6;
@@ -219,11 +226,77 @@
             this.goWorkButton.UseVisualStyleBackColor = true;
             this.goWorkButton.Click += new System.EventHandler(this.goWorkButton_click);
             // 
+            // greenChannelQualityUpDown
+            // 
+            this.greenChannelQualityUpDown.Location = new System.Drawing.Point(632, 211);
+            this.greenChannelQualityUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.greenChannelQualityUpDown.Name = "greenChannelQualityUpDown";
+            this.greenChannelQualityUpDown.Size = new System.Drawing.Size(73, 20);
+            this.greenChannelQualityUpDown.TabIndex = 15;
+            this.greenChannelQualityUpDown.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // redChannelQualityUpDown
+            // 
+            this.redChannelQualityUpDown.Location = new System.Drawing.Point(632, 185);
+            this.redChannelQualityUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.redChannelQualityUpDown.Name = "redChannelQualityUpDown";
+            this.redChannelQualityUpDown.Size = new System.Drawing.Size(73, 20);
+            this.redChannelQualityUpDown.TabIndex = 16;
+            this.redChannelQualityUpDown.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // redChannelLabel
+            // 
+            this.redChannelLabel.AutoSize = true;
+            this.redChannelLabel.Location = new System.Drawing.Point(586, 187);
+            this.redChannelLabel.Name = "redChannelLabel";
+            this.redChannelLabel.Size = new System.Drawing.Size(27, 13);
+            this.redChannelLabel.TabIndex = 17;
+            this.redChannelLabel.Text = "Red";
+            // 
+            // greenChannelLabel
+            // 
+            this.greenChannelLabel.AutoSize = true;
+            this.greenChannelLabel.Location = new System.Drawing.Point(586, 213);
+            this.greenChannelLabel.Name = "greenChannelLabel";
+            this.greenChannelLabel.Size = new System.Drawing.Size(36, 13);
+            this.greenChannelLabel.TabIndex = 18;
+            this.greenChannelLabel.Text = "Green";
+            // 
+            // blueChannelLabel
+            // 
+            this.blueChannelLabel.AutoSize = true;
+            this.blueChannelLabel.Location = new System.Drawing.Point(586, 239);
+            this.blueChannelLabel.Name = "blueChannelLabel";
+            this.blueChannelLabel.Size = new System.Drawing.Size(28, 13);
+            this.blueChannelLabel.TabIndex = 19;
+            this.blueChannelLabel.Text = "Blue";
+            // 
             // ImageCompressionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.blueChannelLabel);
+            this.Controls.Add(this.greenChannelLabel);
+            this.Controls.Add(this.redChannelLabel);
+            this.Controls.Add(this.redChannelQualityUpDown);
+            this.Controls.Add(this.greenChannelQualityUpDown);
             this.Controls.Add(this.goWorkButton);
             this.Controls.Add(this.nonZeroAfterValueLabel);
             this.Controls.Add(this.nonZeroAfterTextLabel);
@@ -234,7 +307,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.compressionRateLabel);
             this.Controls.Add(this.qualityLabel);
-            this.Controls.Add(this.compressionRateUpDown);
+            this.Controls.Add(this.blueChannelQualityUpDown);
             this.Controls.Add(this.chooseImageButton);
             this.Name = "ImageCompressionForm";
             this.Text = "Image compression";
@@ -243,8 +316,10 @@
             this.compressedImageFlowLayoutPanel.ResumeLayout(false);
             this.compressedImageFlowLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.compressedImageBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.compressionRateUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.blueChannelQualityUpDown)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.greenChannelQualityUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.redChannelQualityUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -256,7 +331,7 @@
         private System.Windows.Forms.Button chooseImageButton;
         private System.Windows.Forms.FlowLayoutPanel originalImageFlowLayoutPanel;
         private System.Windows.Forms.FlowLayoutPanel compressedImageFlowLayoutPanel;
-        private System.Windows.Forms.NumericUpDown compressionRateUpDown;
+        private System.Windows.Forms.NumericUpDown blueChannelQualityUpDown;
         private System.Windows.Forms.Label qualityLabel;
         private System.Windows.Forms.PictureBox compressedImageBox;
         private System.Windows.Forms.Label compressionInProgressLabel;
@@ -268,6 +343,11 @@
         private System.Windows.Forms.Label nonZeroAfterTextLabel;
         private System.Windows.Forms.Label nonZeroAfterValueLabel;
         private System.Windows.Forms.Button goWorkButton;
+        private System.Windows.Forms.NumericUpDown greenChannelQualityUpDown;
+        private System.Windows.Forms.NumericUpDown redChannelQualityUpDown;
+        private System.Windows.Forms.Label redChannelLabel;
+        private System.Windows.Forms.Label greenChannelLabel;
+        private System.Windows.Forms.Label blueChannelLabel;
     }
 }
 

@@ -44,6 +44,7 @@
             this.nonZeroBeforeValueLabel = new System.Windows.Forms.Label();
             this.nonZeroAfterTextLabel = new System.Windows.Forms.Label();
             this.nonZeroAfterValueLabel = new System.Windows.Forms.Label();
+            this.goWorkButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.originalImageBox)).BeginInit();
             this.originalImageFlowLayoutPanel.SuspendLayout();
             this.compressedImageFlowLayoutPanel.SuspendLayout();
@@ -119,7 +120,7 @@
             // 
             // compressionRateUpDown
             // 
-            this.compressionRateUpDown.Location = new System.Drawing.Point(584, 265);
+            this.compressionRateUpDown.Location = new System.Drawing.Point(584, 237);
             this.compressionRateUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -133,13 +134,12 @@
             0,
             0,
             0});
-            this.compressionRateUpDown.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             this.compressionRateUpDown.KeyUp += new System.Windows.Forms.KeyEventHandler(this.compressionRateUpDown_KeyUp);
             // 
             // qualityLabel
             // 
             this.qualityLabel.AutoSize = true;
-            this.qualityLabel.Location = new System.Drawing.Point(600, 249);
+            this.qualityLabel.Location = new System.Drawing.Point(611, 221);
             this.qualityLabel.Name = "qualityLabel";
             this.qualityLabel.Size = new System.Drawing.Size(53, 13);
             this.qualityLabel.TabIndex = 6;
@@ -148,7 +148,7 @@
             // compressionRateLabel
             // 
             this.compressionRateLabel.AutoSize = true;
-            this.compressionRateLabel.Location = new System.Drawing.Point(584, 288);
+            this.compressionRateLabel.Location = new System.Drawing.Point(589, 317);
             this.compressionRateLabel.Name = "compressionRateLabel";
             this.compressionRateLabel.Size = new System.Drawing.Size(115, 13);
             this.compressionRateLabel.TabIndex = 7;
@@ -176,7 +176,7 @@
             // nonZeroBeforeTextLabel
             // 
             this.nonZeroBeforeTextLabel.AutoSize = true;
-            this.nonZeroBeforeTextLabel.Location = new System.Drawing.Point(587, 314);
+            this.nonZeroBeforeTextLabel.Location = new System.Drawing.Point(592, 343);
             this.nonZeroBeforeTextLabel.Name = "nonZeroBeforeTextLabel";
             this.nonZeroBeforeTextLabel.Size = new System.Drawing.Size(86, 13);
             this.nonZeroBeforeTextLabel.TabIndex = 10;
@@ -185,7 +185,7 @@
             // nonZeroBeforeValueLabel
             // 
             this.nonZeroBeforeValueLabel.AutoSize = true;
-            this.nonZeroBeforeValueLabel.Location = new System.Drawing.Point(590, 338);
+            this.nonZeroBeforeValueLabel.Location = new System.Drawing.Point(595, 367);
             this.nonZeroBeforeValueLabel.Name = "nonZeroBeforeValueLabel";
             this.nonZeroBeforeValueLabel.Size = new System.Drawing.Size(88, 13);
             this.nonZeroBeforeValueLabel.TabIndex = 11;
@@ -194,7 +194,7 @@
             // nonZeroAfterTextLabel
             // 
             this.nonZeroAfterTextLabel.AutoSize = true;
-            this.nonZeroAfterTextLabel.Location = new System.Drawing.Point(587, 368);
+            this.nonZeroAfterTextLabel.Location = new System.Drawing.Point(592, 397);
             this.nonZeroAfterTextLabel.Name = "nonZeroAfterTextLabel";
             this.nonZeroAfterTextLabel.Size = new System.Drawing.Size(77, 13);
             this.nonZeroAfterTextLabel.TabIndex = 12;
@@ -203,17 +203,28 @@
             // nonZeroAfterValueLabel
             // 
             this.nonZeroAfterValueLabel.AutoSize = true;
-            this.nonZeroAfterValueLabel.Location = new System.Drawing.Point(590, 396);
+            this.nonZeroAfterValueLabel.Location = new System.Drawing.Point(595, 425);
             this.nonZeroAfterValueLabel.Name = "nonZeroAfterValueLabel";
             this.nonZeroAfterValueLabel.Size = new System.Drawing.Size(79, 13);
             this.nonZeroAfterValueLabel.TabIndex = 13;
             this.nonZeroAfterValueLabel.Text = "#non-zero-after";
+            // 
+            // goWorkButton
+            // 
+            this.goWorkButton.Location = new System.Drawing.Point(603, 274);
+            this.goWorkButton.Name = "goWorkButton";
+            this.goWorkButton.Size = new System.Drawing.Size(75, 23);
+            this.goWorkButton.TabIndex = 14;
+            this.goWorkButton.Text = "Go work";
+            this.goWorkButton.UseVisualStyleBackColor = true;
+            this.goWorkButton.Click += new System.EventHandler(this.goWorkButton_click);
             // 
             // ImageCompressionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.goWorkButton);
             this.Controls.Add(this.nonZeroAfterValueLabel);
             this.Controls.Add(this.nonZeroAfterTextLabel);
             this.Controls.Add(this.nonZeroBeforeValueLabel);
@@ -256,6 +267,7 @@
         private System.Windows.Forms.Label nonZeroBeforeValueLabel;
         private System.Windows.Forms.Label nonZeroAfterTextLabel;
         private System.Windows.Forms.Label nonZeroAfterValueLabel;
+        private System.Windows.Forms.Button goWorkButton;
     }
 }
 

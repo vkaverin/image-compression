@@ -57,18 +57,6 @@ namespace image_compression
             }
         }
 
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-            drawInProgressUI();
-
-            int quality = (int) compressionRateUpDown.Value;
-            CompressionInfo compressionInfo = new HaarCompression(quality).compressImage(originalImageBox.Image);
-            compressedImageBox.Image = compressionInfo.Target;
-
-            saveImageIntoFile(compressionInfo.Target);
-            drawAfterCompressionUI(compressionInfo);
-        }
-
         private static void saveImageIntoFile(Image image)
         {
             String storageDirectory = Application.StartupPath + System.IO.Path.DirectorySeparatorChar + "compressed";
@@ -122,8 +110,20 @@ namespace image_compression
         {
             if (e.KeyCode == Keys.Enter)
             {
-                this.numericUpDown1_ValueChanged(sender, e);
+                this.goWorkButton_click(sender, e);
             }
+        }
+
+        private void goWorkButton_click(object sender, EventArgs e)
+        {
+            drawInProgressUI();
+
+            int quality = (int) compressionRateUpDown.Value;
+            CompressionInfo compressionInfo = new HaarCompression(quality).compressImage(originalImageBox.Image);
+            compressedImageBox.Image = compressionInfo.Target;
+
+            saveImageIntoFile(compressionInfo.Target);
+            drawAfterCompressionUI(compressionInfo);
         }
     }
 }

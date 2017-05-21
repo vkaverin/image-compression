@@ -4,46 +4,45 @@ using System.Collections.Generic;
 
 namespace image_compression
 {
-
-public class HaarCompression
-{
-    private const int boxSize = 8;
-    private int nonZeroOriginal = 0;
-    private int nonZeroCompressed = 0;
-
-    private Image sourceImage;
-
-    private int redChannelQuality;
-    private int greenChannelQuality;
-    private int blueChannelQuality;
-
-    public void setRedChannelQuality(int quality)
+    public class HaarCompression
     {
-        this.redChannelQuality = quality;
-    }
+        private const int boxSize = 8;
+        private int nonZeroOriginal = 0;
+        private int nonZeroCompressed = 0;
 
-    public void setGreenChannelQuality(int quality)
-    {
-        this.greenChannelQuality = quality;
-    }
+        private Image sourceImage;
 
-    public void setBlueChannelQuality(int quality)
-    {
-        this.blueChannelQuality = quality;
-    }
+        private int redChannelQuality;
+        private int greenChannelQuality;
+        private int blueChannelQuality;
 
-    public void setSourceImage(Image image)
-    {
-        this.sourceImage = image;
-    }
+        public void setRedChannelQuality(int quality)
+        {
+            this.redChannelQuality = quality;
+        }
 
-    public static CompressionProcessBuilder compress(Image image)
-    {
-        return new CompressionProcessBuilder(image);
-    }
+        public void setGreenChannelQuality(int quality)
+        {
+            this.greenChannelQuality = quality;
+        }
 
-    public CompressionDetails process()
-    {
+        public void setBlueChannelQuality(int quality)
+        {
+            this.blueChannelQuality = quality;
+        }
+
+        public void setSourceImage(Image image)
+        {
+            this.sourceImage = image;
+        }
+
+        public static CompressionProcessBuilder compress(Image image)
+        {
+            return new CompressionProcessBuilder(image);
+        }
+
+        public CompressionDetails process()
+        {
             ////////////////
             ChannelsContainer channels = splitChannels(sourceImage);
             ChannelsContainer compressedChannels = compressChannels(channels);
@@ -51,14 +50,14 @@ public class HaarCompression
             Image compressedImage = restoreImage(restoredChannels);
             ////////////////
 
-        CompressionDetails compressionDetails = new CompressionDetails();
-        compressionDetails.SourceImage = sourceImage;
-        compressionDetails.CompressedImage = compressedImage;
-        compressionDetails.SourceImageNonZeroPixelsCount = nonZeroOriginal;
-        compressionDetails.CompressedImageNonZeroPixelsCount = nonZeroCompressed;
-        
-        return compressionDetails;
-    }
+            CompressionDetails compressionDetails = new CompressionDetails();
+            compressionDetails.SourceImage = sourceImage;
+            compressionDetails.CompressedImage = compressedImage;
+            compressionDetails.SourceImageNonZeroPixelsCount = nonZeroOriginal;
+            compressionDetails.CompressedImageNonZeroPixelsCount = nonZeroCompressed;
+
+            return compressionDetails;
+        }
 
         private ChannelsContainer splitChannels(Image image)
         {
@@ -72,7 +71,7 @@ public class HaarCompression
                 for (int j = 0; j < image.Width; ++j)
                 {
                     channels.red[i][j] = sourceBitmap.GetPixel(j, i).R;
-                    channels.green[i][j] = sourceBitmap.GetPixel(j ,i).G;
+                    channels.green[i][j] = sourceBitmap.GetPixel(j, i).G;
                     channels.blue[i][j] = sourceBitmap.GetPixel(j, i).B;
                 }
             }
@@ -105,7 +104,7 @@ public class HaarCompression
                 {
                     double[][] box = getBox(matrix, i, j);
                     double[][] compressedBox = haarCompression(box);
-                    
+
                     threshold(ref compressedBox, quality);
                     putBox(compressedMatrix, compressedBox, i, j);
                 }
@@ -154,7 +153,7 @@ public class HaarCompression
         }
 
         private Image restoreImage(ChannelsContainer channels)
-    {
+        {
             Bitmap output = new Bitmap(channels.Width, channels.Height);
             for (int i = 0; i < channels.Height; ++i)
             {
@@ -166,7 +165,7 @@ public class HaarCompression
             }
 
             return output;
-    }
+        }
 
         private Color asColor(double red, double green, double blue)
         {
@@ -175,74 +174,74 @@ public class HaarCompression
 
         private int toRGBRange(double value)
         {
-            int val = (int) value;
+            int val = (int)value;
             return Math.Max(Math.Min(val, 255), 0);
         }
 
-    private double[][] haarCompression(double[][] source)
-    {
-        double[][] matrix = new double[source.Length][];
-        for (int i = 0; i < source.Length; ++i)
+        private double[][] haarCompression(double[][] source)
         {
-            matrix[i] = new double[source[i].Length];
-            source[i].CopyTo(matrix[i], 0);
-        }
-
-        for (int i = 0; i < HaarCompression.boxSize; ++i)
-        {
-            int columns = HaarCompression.boxSize;
-            double[] temp = new double[HaarCompression.boxSize];
-
-            while (columns > 0)
+            double[][] matrix = new double[source.Length][];
+            for (int i = 0; i < source.Length; ++i)
             {
-                for (int j = 0; j < columns / 2; ++j)
-                {
-                    temp[j] = (matrix[i][2 * j] + matrix[i][2 * j + 1]) / 2;
-                }
-
-                int k = columns / 2;
-                for (int j = 0; j < columns / 2; ++j, ++k)
-                {
-                    temp[k] = (matrix[i][2 * j] - matrix[i][2 * j + 1]) / 2;
-                }
-
-                for (int j = 0; j < HaarCompression.boxSize; ++j)
-                {
-                    matrix[i][j] = temp[j];
-                }
-
-                columns /= 2;
+                matrix[i] = new double[source[i].Length];
+                source[i].CopyTo(matrix[i], 0);
             }
-        }
 
-        for (int i = 0; i < HaarCompression.boxSize; ++i)
-        {
-            int rows = HaarCompression.boxSize;
-            double[] temp = new double[HaarCompression.boxSize];
-            while (rows > 0)
+            for (int i = 0; i < HaarCompression.boxSize; ++i)
             {
-                for (int j = 0; j < rows / 2; ++j)
-                {
-                    temp[j] = (matrix[2 * j][i] + matrix[2 * j + 1][i]) / 2;
-                }
+                int columns = HaarCompression.boxSize;
+                double[] temp = new double[HaarCompression.boxSize];
 
-                int k = rows / 2;
-                for (int j = 0; j < rows / 2; ++j, ++k)
+                while (columns > 0)
                 {
-                    temp[k] = (matrix[2 * j][i] - matrix[2 * j + 1][i]) / 2;
-                }
+                    for (int j = 0; j < columns / 2; ++j)
+                    {
+                        temp[j] = (matrix[i][2 * j] + matrix[i][2 * j + 1]) / 2;
+                    }
 
-                for (int j = 0; j < HaarCompression.boxSize; ++j)
-                {
-                    matrix[j][i] = temp[j];
-                }
+                    int k = columns / 2;
+                    for (int j = 0; j < columns / 2; ++j, ++k)
+                    {
+                        temp[k] = (matrix[i][2 * j] - matrix[i][2 * j + 1]) / 2;
+                    }
 
-                rows /= 2;
+                    for (int j = 0; j < HaarCompression.boxSize; ++j)
+                    {
+                        matrix[i][j] = temp[j];
+                    }
+
+                    columns /= 2;
+                }
             }
-        }
 
-        return matrix;
-    }
+            for (int i = 0; i < HaarCompression.boxSize; ++i)
+            {
+                int rows = HaarCompression.boxSize;
+                double[] temp = new double[HaarCompression.boxSize];
+                while (rows > 0)
+                {
+                    for (int j = 0; j < rows / 2; ++j)
+                    {
+                        temp[j] = (matrix[2 * j][i] + matrix[2 * j + 1][i]) / 2;
+                    }
+
+                    int k = rows / 2;
+                    for (int j = 0; j < rows / 2; ++j, ++k)
+                    {
+                        temp[k] = (matrix[2 * j][i] - matrix[2 * j + 1][i]) / 2;
+                    }
+
+                    for (int j = 0; j < HaarCompression.boxSize; ++j)
+                    {
+                        matrix[j][i] = temp[j];
+                    }
+
+                    rows /= 2;
+                }
+            }
+
+            return matrix;
+        }
 
         private void threshold(ref double[][] matrix, int quality)
         {
@@ -280,32 +279,32 @@ public class HaarCompression
             }
         }
 
-    struct MatrixElement : IComparable<MatrixElement>
-    {
-        Tuple<Int32, Int32> position;
-        double value;
-
-        public MatrixElement(int i, int j, double value)
+        struct MatrixElement : IComparable<MatrixElement>
         {
-            this.position = new Tuple<int, int>(i, j);
-            this.value = value;
-        }
+            Tuple<Int32, Int32> position;
+            double value;
 
-        public int CompareTo(MatrixElement other)
-        {
-            if (this.value == other.value)
+            public MatrixElement(int i, int j, double value)
             {
-                return 0;
+                this.position = new Tuple<int, int>(i, j);
+                this.value = value;
             }
 
-            return Math.Abs(this.value) < Math.Abs(other.value) ? -1 : 1;
-        }
+            public int CompareTo(MatrixElement other)
+            {
+                if (this.value == other.value)
+                {
+                    return 0;
+                }
 
-        public Tuple<Int32, Int32> getPosition()
-        {
-            return this.position;
+                return Math.Abs(this.value) < Math.Abs(other.value) ? -1 : 1;
+            }
+
+            public Tuple<Int32, Int32> getPosition()
+            {
+                return this.position;
+            }
         }
-    }
 
 
         private double[][] restoreMatrix(double[][] matrix)
@@ -330,62 +329,62 @@ public class HaarCompression
         }
 
         private double[][] restoreHaar(double[][] source)
-    {
-        double[][] matrix = new double[source.Length][];
-        for (int i = 0; i < source.Length; ++i)
         {
-            matrix[i] = new double[source[i].Length];
-            source[i].CopyTo(matrix[i], 0);
-        }
-
-        for (int i = 0; i < HaarCompression.boxSize; ++i)
-        {
-            int columns = 1;
-            double[] temp = new double[HaarCompression.boxSize];
-            while (columns * 2 <= HaarCompression.boxSize)
+            double[][] matrix = new double[source.Length][];
+            for (int i = 0; i < source.Length; ++i)
             {
-                for (int j = 0; j < HaarCompression.boxSize; ++j)
-                {
-                    temp[j] = matrix[i][j];
-                }
-
-                for (int j = 0; j < columns; ++j)
-                {
-                    matrix[i][2 * j] = temp[j] + temp[j + columns];
-                    matrix[i][2 * j + 1] = temp[j] - temp[j + columns];
-                }
-
-                columns *= 2;
+                matrix[i] = new double[source[i].Length];
+                source[i].CopyTo(matrix[i], 0);
             }
-        }
 
-        for (int i = 0; i < HaarCompression.boxSize; ++i)
-        {
-            int rows = 1;
-            double[] temp = new double[HaarCompression.boxSize];
-            while (rows * 2 <= HaarCompression.boxSize)
+            for (int i = 0; i < HaarCompression.boxSize; ++i)
             {
-                for (int j = 0; j < HaarCompression.boxSize; ++j)
+                int columns = 1;
+                double[] temp = new double[HaarCompression.boxSize];
+                while (columns * 2 <= HaarCompression.boxSize)
                 {
-                    temp[j] = matrix[j][i];
+                    for (int j = 0; j < HaarCompression.boxSize; ++j)
+                    {
+                        temp[j] = matrix[i][j];
+                    }
+
+                    for (int j = 0; j < columns; ++j)
+                    {
+                        matrix[i][2 * j] = temp[j] + temp[j + columns];
+                        matrix[i][2 * j + 1] = temp[j] - temp[j + columns];
+                    }
+
+                    columns *= 2;
                 }
-
-                for (int j = 0; j < rows; ++j)
-                {
-                    matrix[2 * j][i] = temp[j] + temp[j + rows];
-                    matrix[2 * j + 1][i] = temp[j] - temp[j + rows];
-                    
-                }
-
-
-                rows *= 2;
             }
+
+            for (int i = 0; i < HaarCompression.boxSize; ++i)
+            {
+                int rows = 1;
+                double[] temp = new double[HaarCompression.boxSize];
+                while (rows * 2 <= HaarCompression.boxSize)
+                {
+                    for (int j = 0; j < HaarCompression.boxSize; ++j)
+                    {
+                        temp[j] = matrix[j][i];
+                    }
+
+                    for (int j = 0; j < rows; ++j)
+                    {
+                        matrix[2 * j][i] = temp[j] + temp[j + rows];
+                        matrix[2 * j + 1][i] = temp[j] - temp[j + rows];
+
+                    }
+
+
+                    rows *= 2;
+                }
+            }
+
+            return matrix;
         }
 
-        return matrix;
-    }
-        
-    private class ChannelsContainer
+        private class ChannelsContainer
         {
             public int Width { get; }
             public int Height { get; }
@@ -412,7 +411,8 @@ public class HaarCompression
                 return this.blue;
             }
 
-            public ChannelsContainer() {
+            public ChannelsContainer()
+            {
             }
 
             public ChannelsContainer(int height, int width)
@@ -438,7 +438,6 @@ public class HaarCompression
 
                 matrix = tmp;
             }
+        }
     }
-}
-
 }

@@ -38,7 +38,44 @@ namespace image_compression
             this.compressionDetails.CompressionTime = stopwatch.ElapsedMilliseconds;
             this.compressionDetails.CompressedImage = compressedImage;
 
+            estimateErrors(channels, restoredChannels);
+
             return compressionDetails;
+        }
+
+        private void estimateErrors(ChannelsContainer original, ChannelsContainer restored)
+        {
+            // Red channel
+            compressionDetails.RedChannelMSE = mse(original.redChannel(), restored.redChannel());
+            compressionDetails.RedChannelPSNR = psnr(compressionDetails.RedChannelMSE);
+
+            // Green Channel
+            compressionDetails.GreenChannelMSE = mse(original.greenChannel(), restored.greenChannel());
+            compressionDetails.GreenChannelPSNR = psnr(compressionDetails.GreenChannelMSE);
+
+            // Blue channel
+            compressionDetails.BlueChannelMSE = mse(original.blueChannel(), restored.blueChannel());
+            compressionDetails.BlueChannelPSNR = psnr(compressionDetails.BlueChannelMSE);
+        }
+
+        private double mse(double[][] original, double[][] restored)
+        {
+            double sum = 0;
+            for (int i = 0; i < restored.Length; ++i)
+            {
+                for (int j = 0; j < restored[i].Length; ++j)
+                {
+                    double diff = restored[i][j] - original[i][j];
+                    sum += diff * diff;
+                }
+            }
+
+            return sum / restored.Length / restored[0].Length;
+        }
+
+        private double psnr(double mse)
+        {
+            return 10 * Math.Log10(255 * 255 / mse);
         }
 
         private ChannelsContainer splitChannels(Image image)

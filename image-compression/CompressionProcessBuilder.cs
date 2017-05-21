@@ -1,63 +1,68 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 
 namespace image_compression
 {
-    public class CompressionProcessBuilder
+    public class CompressionTemplate
     {
-        private HaarCompression compressionTemplate;
+        public Image SourceImage { get; set; }
 
-        public CompressionProcessBuilder(Image image)
+        public int RedChannelQuality { get; set; }
+        public int GreenChannelQuality { get; set; }
+        public int BlueChannelQuality { get; set; }
+    }
+
+    public class CompressionTemplateBuilder
+    {
+        private CompressionTemplate compressionTemplate;
+
+        public CompressionTemplateBuilder(Image image)
         {
             if (image == null)
             {
                 throw new NullReferenceException("Image can not be null");
             }
 
-            this.compressionTemplate = new HaarCompression();
-            this.compressionTemplate.setSourceImage(image);
+            this.compressionTemplate = new CompressionTemplate();
+            this.compressionTemplate.SourceImage = image;
         }
 
-        public CompressionProcessBuilder withRedQuality(int quality)
+        public CompressionTemplateBuilder withRedQuality(int quality)
         {
             validateQuality(quality);
 
-            this.compressionTemplate.setRedChannelQuality(quality);
+            this.compressionTemplate.RedChannelQuality = quality;
             return this;
         }
 
-        public CompressionProcessBuilder withGreenQuality(int quality)
+        public CompressionTemplateBuilder withGreenQuality(int quality)
         {
             validateQuality(quality);
 
-            this.compressionTemplate.setGreenChannelQuality(quality);
+            this.compressionTemplate.GreenChannelQuality = quality;
             return this;
         }
 
-        public CompressionProcessBuilder withBlueQuality(int quality)
+        public CompressionTemplateBuilder withBlueQuality(int quality)
         {
             validateQuality(quality);
 
-            this.compressionTemplate.setBlueChannelQuality(quality);
+            this.compressionTemplate.BlueChannelQuality = quality;
             return this;
         }
 
-        public CompressionProcessBuilder withSourceImage(Image image)
+        public CompressionTemplateBuilder withSourceImage(Image image)
         {
             if (image == null)
             {
                 throw new NullReferenceException("Reference to image is null.");
             }
 
-            this.compressionTemplate.setSourceImage(image);
+            this.compressionTemplate.SourceImage = image;
             return this;
         }
 
-        public HaarCompression build()
+        public CompressionTemplate make()
         {
             return this.compressionTemplate;
         }

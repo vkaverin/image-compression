@@ -37,19 +37,16 @@
             this.compressionInProgressLabel = new System.Windows.Forms.Label();
             this.blueChannelQualityUpDown = new System.Windows.Forms.NumericUpDown();
             this.qualityLabel = new System.Windows.Forms.Label();
-            this.compressionRateLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.nonZeroBeforeTextLabel = new System.Windows.Forms.Label();
-            this.nonZeroBeforeValueLabel = new System.Windows.Forms.Label();
-            this.nonZeroAfterTextLabel = new System.Windows.Forms.Label();
-            this.nonZeroAfterValueLabel = new System.Windows.Forms.Label();
             this.goWorkButton = new System.Windows.Forms.Button();
             this.greenChannelQualityUpDown = new System.Windows.Forms.NumericUpDown();
             this.redChannelQualityUpDown = new System.Windows.Forms.NumericUpDown();
             this.redChannelLabel = new System.Windows.Forms.Label();
             this.greenChannelLabel = new System.Windows.Forms.Label();
             this.blueChannelLabel = new System.Windows.Forms.Label();
+            this.statisticsGroupBox = new System.Windows.Forms.GroupBox();
+            this.statisticsLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.originalImageBox)).BeginInit();
             this.originalImageFlowLayoutPanel.SuspendLayout();
             this.compressedImageFlowLayoutPanel.SuspendLayout();
@@ -58,6 +55,7 @@
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.greenChannelQualityUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.redChannelQualityUpDown)).BeginInit();
+            this.statisticsGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // originalImageBox
@@ -152,15 +150,6 @@
             this.qualityLabel.TabIndex = 6;
             this.qualityLabel.Text = "Quality, %";
             // 
-            // compressionRateLabel
-            // 
-            this.compressionRateLabel.AutoSize = true;
-            this.compressionRateLabel.Location = new System.Drawing.Point(589, 317);
-            this.compressionRateLabel.Name = "compressionRateLabel";
-            this.compressionRateLabel.Size = new System.Drawing.Size(115, 13);
-            this.compressionRateLabel.TabIndex = 7;
-            this.compressionRateLabel.Text = "Compression rate: XXX";
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.originalImageFlowLayoutPanel);
@@ -179,42 +168,6 @@
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Compressed image";
-            // 
-            // nonZeroBeforeTextLabel
-            // 
-            this.nonZeroBeforeTextLabel.AutoSize = true;
-            this.nonZeroBeforeTextLabel.Location = new System.Drawing.Point(592, 343);
-            this.nonZeroBeforeTextLabel.Name = "nonZeroBeforeTextLabel";
-            this.nonZeroBeforeTextLabel.Size = new System.Drawing.Size(86, 13);
-            this.nonZeroBeforeTextLabel.TabIndex = 10;
-            this.nonZeroBeforeTextLabel.Text = "Non-zero before:";
-            // 
-            // nonZeroBeforeValueLabel
-            // 
-            this.nonZeroBeforeValueLabel.AutoSize = true;
-            this.nonZeroBeforeValueLabel.Location = new System.Drawing.Point(595, 367);
-            this.nonZeroBeforeValueLabel.Name = "nonZeroBeforeValueLabel";
-            this.nonZeroBeforeValueLabel.Size = new System.Drawing.Size(88, 13);
-            this.nonZeroBeforeValueLabel.TabIndex = 11;
-            this.nonZeroBeforeValueLabel.Text = "#non-zero-before";
-            // 
-            // nonZeroAfterTextLabel
-            // 
-            this.nonZeroAfterTextLabel.AutoSize = true;
-            this.nonZeroAfterTextLabel.Location = new System.Drawing.Point(592, 397);
-            this.nonZeroAfterTextLabel.Name = "nonZeroAfterTextLabel";
-            this.nonZeroAfterTextLabel.Size = new System.Drawing.Size(77, 13);
-            this.nonZeroAfterTextLabel.TabIndex = 12;
-            this.nonZeroAfterTextLabel.Text = "Non-zero after:";
-            // 
-            // nonZeroAfterValueLabel
-            // 
-            this.nonZeroAfterValueLabel.AutoSize = true;
-            this.nonZeroAfterValueLabel.Location = new System.Drawing.Point(595, 425);
-            this.nonZeroAfterValueLabel.Name = "nonZeroAfterValueLabel";
-            this.nonZeroAfterValueLabel.Size = new System.Drawing.Size(79, 13);
-            this.nonZeroAfterValueLabel.TabIndex = 13;
-            this.nonZeroAfterValueLabel.Text = "#non-zero-after";
             // 
             // goWorkButton
             // 
@@ -287,25 +240,40 @@
             this.blueChannelLabel.TabIndex = 19;
             this.blueChannelLabel.Text = "Blue";
             // 
+            // statisticsGroupBox
+            // 
+            this.statisticsGroupBox.Controls.Add(this.statisticsLabel);
+            this.statisticsGroupBox.Location = new System.Drawing.Point(1279, 15);
+            this.statisticsGroupBox.Name = "statisticsGroupBox";
+            this.statisticsGroupBox.Size = new System.Drawing.Size(499, 268);
+            this.statisticsGroupBox.TabIndex = 20;
+            this.statisticsGroupBox.TabStop = false;
+            this.statisticsGroupBox.Text = "Statistics";
+            // 
+            // statisticsLabel
+            // 
+            this.statisticsLabel.AutoSize = true;
+            this.statisticsLabel.Location = new System.Drawing.Point(11, 16);
+            this.statisticsLabel.Name = "statisticsLabel";
+            this.statisticsLabel.Size = new System.Drawing.Size(61, 13);
+            this.statisticsLabel.TabIndex = 0;
+            this.statisticsLabel.Text = "#statistics#";
+            // 
             // ImageCompressionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.ClientSize = new System.Drawing.Size(1792, 633);
+            this.Controls.Add(this.statisticsGroupBox);
             this.Controls.Add(this.blueChannelLabel);
             this.Controls.Add(this.greenChannelLabel);
             this.Controls.Add(this.redChannelLabel);
             this.Controls.Add(this.redChannelQualityUpDown);
             this.Controls.Add(this.greenChannelQualityUpDown);
             this.Controls.Add(this.goWorkButton);
-            this.Controls.Add(this.nonZeroAfterValueLabel);
-            this.Controls.Add(this.nonZeroAfterTextLabel);
-            this.Controls.Add(this.nonZeroBeforeValueLabel);
-            this.Controls.Add(this.nonZeroBeforeTextLabel);
             this.Controls.Add(this.compressedImageFlowLayoutPanel);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.compressionRateLabel);
             this.Controls.Add(this.qualityLabel);
             this.Controls.Add(this.blueChannelQualityUpDown);
             this.Controls.Add(this.chooseImageButton);
@@ -320,6 +288,8 @@
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.greenChannelQualityUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.redChannelQualityUpDown)).EndInit();
+            this.statisticsGroupBox.ResumeLayout(false);
+            this.statisticsGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -335,19 +305,16 @@
         private System.Windows.Forms.Label qualityLabel;
         private System.Windows.Forms.PictureBox compressedImageBox;
         private System.Windows.Forms.Label compressionInProgressLabel;
-        private System.Windows.Forms.Label compressionRateLabel;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label nonZeroBeforeTextLabel;
-        private System.Windows.Forms.Label nonZeroBeforeValueLabel;
-        private System.Windows.Forms.Label nonZeroAfterTextLabel;
-        private System.Windows.Forms.Label nonZeroAfterValueLabel;
         private System.Windows.Forms.Button goWorkButton;
         private System.Windows.Forms.NumericUpDown greenChannelQualityUpDown;
         private System.Windows.Forms.NumericUpDown redChannelQualityUpDown;
         private System.Windows.Forms.Label redChannelLabel;
         private System.Windows.Forms.Label greenChannelLabel;
         private System.Windows.Forms.Label blueChannelLabel;
+        private System.Windows.Forms.GroupBox statisticsGroupBox;
+        private System.Windows.Forms.Label statisticsLabel;
     }
 }
 

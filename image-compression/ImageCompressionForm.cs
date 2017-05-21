@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Diagnostics;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
 namespace image_compression
@@ -26,12 +28,9 @@ namespace image_compression
             greenChannelLabel.Hide();
             blueChannelLabel.Hide();
             compressionInProgressLabel.Hide();
-            compressionRateLabel.Hide();
-            nonZeroBeforeTextLabel.Hide();
-            nonZeroBeforeValueLabel.Hide();
-            nonZeroAfterTextLabel.Hide();
-            nonZeroAfterValueLabel.Hide();
             qualityLabel.Hide();
+            statisticsGroupBox.Hide();
+            statisticsLabel.Hide();
 
             // Buttons & Co
             redChannelQualityUpDown.Hide();
@@ -54,11 +53,6 @@ namespace image_compression
         private void newImageChosenView()
         {
             compressedImageBox.Hide();
-            compressionRateLabel.Hide();
-            nonZeroBeforeTextLabel.Hide();
-            nonZeroBeforeValueLabel.Hide();
-            nonZeroAfterTextLabel.Hide();
-            nonZeroAfterValueLabel.Hide();
 
             redChannelLabel.Show();
             redChannelQualityUpDown.Show();
@@ -69,6 +63,8 @@ namespace image_compression
 
             goWorkButton.Show();
             qualityLabel.Show();
+            statisticsGroupBox.Hide();
+            statisticsLabel.Hide();
         }
 
         private static void saveToFile(Image image)
@@ -93,27 +89,14 @@ namespace image_compression
             compressedImageBox.Hide();
             compressionInProgressLabel.Show();
 
-            compressionRateLabel.Hide();
-            nonZeroBeforeTextLabel.Hide();
-            nonZeroBeforeValueLabel.Hide();
-            nonZeroAfterTextLabel.Hide();
-            nonZeroAfterValueLabel.Hide();
-
             this.Update();
         }
 
-        private void compressionCompletedUIView(CompressionDetails compressionInfo)
+        private void compressionCompletedUIView(ImageCompressionDetails compressionDetails)
         {
             compressionInProgressLabel.Hide();
             compressedImageBox.Show();
-            compressionRateLabel.Text = String.Format("Compression rate: {0:F2}", compressionInfo.getRatio());
-            compressionRateLabel.Show();
-            nonZeroBeforeTextLabel.Show();
-            nonZeroBeforeValueLabel.Text = compressionInfo.SourceImageNonZeroPixelsCount.ToString();
-            nonZeroBeforeValueLabel.Show();
-            nonZeroAfterTextLabel.Show();
-            nonZeroAfterValueLabel.Text = compressionInfo.CompressedImageNonZeroPixelsCount.ToString();
-            nonZeroAfterValueLabel.Show();
+            fillStatistics(compressionDetails);
 
             redChannelQualityUpDown.Enabled = true;
             greenChannelQualityUpDown.Enabled = true;
@@ -121,6 +104,27 @@ namespace image_compression
             goWorkButton.Enabled = true;
             chooseImageButton.Enabled = true;
             this.Update();
+        }
+
+        private void fillStatistics(ImageCompressionDetails compressionDetails)
+        {
+            StringBuilder statistics = new StringBuilder();
+            statistics.AppendFormat("Compression took {0} second(s)\n", compressionDetails.CompressionTime / 1000.0);
+            statistics.AppendFormat("Red channel:\n");
+            statistics.AppendFormat("  Number of nonzero elements in original image: {0}\n", compressionDetails.RedChannelNonzeroElementsNumberOriginal);
+            statistics.AppendFormat("  Number of nonzero elements in compressed image: {0}\n", compressionDetails.RedChannelNonzeroElementsNumberCompressed);
+            statistics.AppendFormat("  Compression ratio: {0:F3}\n", compressionDetails.RedChannelCompressionRatio());
+            statistics.AppendFormat("Green channel:\n");
+            statistics.AppendFormat("  Number of nonzero elements in original image: {0}\n", compressionDetails.GreenChannelNonzeroElementsNumberOriginal);
+            statistics.AppendFormat("  Number of nonzero elements in compressed image: {0}\n", compressionDetails.GreenChannelNonzeroElementsNumberCompressed);
+            statistics.AppendFormat("  Compression ratio: {0:F3}\n", compressionDetails.GreenChannelCompressionRatio());
+            statistics.AppendFormat("Blue channel:\n");
+            statistics.AppendFormat("  Number of nonzero elements in original image: {0}\n", compressionDetails.BlueChannelNonzeroElementsNumberOriginal);
+            statistics.AppendFormat("  Number of nonzero elements in compressed image: {0}\n", compressionDetails.BlueChannelNonzeroElementsNumberCompressed);
+            statistics.AppendFormat("  Compression ratio: {0:F3}\n", compressionDetails.BlueChannelCompressionRatio());
+            statisticsLabel.Text = statistics.ToString();
+            statisticsGroupBox.Show();
+            statisticsLabel.Show();
         }
 
         private void qualityUpDown_KeyUp(object sender, KeyEventArgs e)
@@ -138,12 +142,12 @@ namespace image_compression
             int redQuality = (int) redChannelQualityUpDown.Value;
             int greenQuality = (int) greenChannelQualityUpDown.Value;
             int blueQuality = (int) blueChannelQualityUpDown.Value;
-            HaarCompression compression = HaarCompression.compress(originalImageBox.Image)
+            CompressionTemplate compressionTemplate = HaarCompression.makeCompressionTemplateFor(originalImageBox.Image)
                 .withRedQuality(redQuality)
                 .withGreenQuality(greenQuality)
                 .withBlueQuality(blueQuality)
-                .build();
-            CompressionDetails compressionDetails = compression.process();
+                .make();
+            ImageCompressionDetails compressionDetails = HaarCompression.process(compressionTemplate);
             compressedImageBox.Image = compressionDetails.CompressedImage;
 
             saveToFile(compressionDetails.CompressedImage);

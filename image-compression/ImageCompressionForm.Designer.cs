@@ -245,7 +245,7 @@
             this.statisticsGroupBox.Controls.Add(this.statisticsLabel);
             this.statisticsGroupBox.Location = new System.Drawing.Point(1279, 15);
             this.statisticsGroupBox.Name = "statisticsGroupBox";
-            this.statisticsGroupBox.Size = new System.Drawing.Size(499, 268);
+            this.statisticsGroupBox.Size = new System.Drawing.Size(499, 543);
             this.statisticsGroupBox.TabIndex = 20;
             this.statisticsGroupBox.TabStop = false;
             this.statisticsGroupBox.Text = "Statistics";

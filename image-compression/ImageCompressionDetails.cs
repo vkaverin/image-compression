@@ -11,6 +11,12 @@ public class ImageCompressionDetails
     public int GreenChannelNonzeroElementsNumberCompressed { get; set; }
     public int BlueChannelNonzeroElementsNumberOriginal { get; set; }
     public int BlueChannelNonzeroElementsNumberCompressed { get; set; }
+    public double RedChannelMSE { get; set; }
+    public double RedChannelPSNR { get; set; }
+    public double GreenChannelMSE { get; set; }
+    public double GreenChannelPSNR { get; set; }
+    public double BlueChannelMSE { get; set; }
+    public double BlueChannelPSNR { get; set; }
     public long CompressionTime { get; set; }
 
     public double RedChannelCompressionRatio()

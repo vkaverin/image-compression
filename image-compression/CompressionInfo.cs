@@ -2,16 +2,16 @@
 using System.Drawing;
 using System.Collections.Generic;
 
-public class CompressionInfo
+public class CompressionDetails
 {
     public int Quality { get; set; }
-    public Image Source { get; set; }
-    public Image Target { get; set; }
-    public int SourceNonZero { get; set; }
-    public int CompressedNonZero { get; set; }
+    public Image SourceImage { get; set; }
+    public Image CompressedImage { get; set; }
+    public int SourceImageNonZeroPixelsCount { get; set; }
+    public int CompressedImageNonZeroPixelsCount { get; set; }
 
     public double getRatio()
     {
-        return (this.SourceNonZero + 0.0) / this.CompressedNonZero;
+        return (this.SourceImageNonZeroPixelsCount + 0.0) / this.CompressedImageNonZeroPixelsCount;
     }
 }

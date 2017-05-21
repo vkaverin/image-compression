@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Collections.Generic;
 
@@ -7,61 +8,42 @@ namespace image_compression
     public class HaarCompression
     {
         private const int boxSize = 8;
-        private int nonZeroOriginal = 0;
-        private int nonZeroCompressed = 0;
 
-        private Image sourceImage;
+        private CompressionTemplate compressionTemplate;
+        private ImageCompressionDetails compressionDetails = new ImageCompressionDetails();
 
-        private int redChannelQuality;
-        private int greenChannelQuality;
-        private int blueChannelQuality;
-
-        public void setRedChannelQuality(int quality)
+        public static ImageCompressionDetails process(CompressionTemplate compressionTemplate)
         {
-            this.redChannelQuality = quality;
+            return new HaarCompression(compressionTemplate).process();
         }
 
-        public void setGreenChannelQuality(int quality)
+        private HaarCompression(CompressionTemplate compressionTemplate)
         {
-            this.greenChannelQuality = quality;
+            this.compressionTemplate = compressionTemplate;
+            this.compressionDetails.SourceImage = this.compressionTemplate.SourceImage;
         }
 
-        public void setBlueChannelQuality(int quality)
+        public static CompressionTemplateBuilder makeCompressionTemplateFor(Image image)
         {
-            this.blueChannelQuality = quality;
+            return new CompressionTemplateBuilder(image);
         }
 
-        public void setSourceImage(Image image)
+        private ImageCompressionDetails process()
         {
-            this.sourceImage = image;
-        }
-
-        public static CompressionProcessBuilder compress(Image image)
-        {
-            return new CompressionProcessBuilder(image);
-        }
-
-        public CompressionDetails process()
-        {
-            ////////////////
-            ChannelsContainer channels = splitChannels(sourceImage);
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            ChannelsContainer channels = splitChannels(compressionTemplate.SourceImage);
             ChannelsContainer compressedChannels = compressChannels(channels);
             ChannelsContainer restoredChannels = restoreChannels(compressedChannels);
             Image compressedImage = restoreImage(restoredChannels);
-            ////////////////
-
-            CompressionDetails compressionDetails = new CompressionDetails();
-            compressionDetails.SourceImage = sourceImage;
-            compressionDetails.CompressedImage = compressedImage;
-            compressionDetails.SourceImageNonZeroPixelsCount = nonZeroOriginal;
-            compressionDetails.CompressedImageNonZeroPixelsCount = nonZeroCompressed;
+            this.compressionDetails.CompressionTime = stopwatch.ElapsedMilliseconds;
+            this.compressionDetails.CompressedImage = compressedImage;
 
             return compressionDetails;
         }
 
         private ChannelsContainer splitChannels(Image image)
         {
-            Bitmap sourceBitmap = new Bitmap(sourceImage);
+            Bitmap sourceBitmap = new Bitmap(image);
 
             ChannelsContainer channels = new ChannelsContainer(image.Height, image.Width);
             channels.allocateMemory();
@@ -82,13 +64,34 @@ namespace image_compression
         private ChannelsContainer compressChannels(ChannelsContainer source)
         {
             ChannelsContainer compressedChannels = new ChannelsContainer((source.Height / HaarCompression.boxSize) * HaarCompression.boxSize, (source.Width / HaarCompression.boxSize) * HaarCompression.boxSize);
-            compressedChannels.red = compressMatrix(source.redChannel(), this.redChannelQuality);
-            compressedChannels.green = compressMatrix(source.greenChannel(), this.greenChannelQuality);
-            compressedChannels.blue = compressMatrix(source.blueChannel(), this.blueChannelQuality);
+            
+            // Red
+            MatrixCompressionDetails details = compressMatrix(source.redChannel(), this.compressionTemplate.RedChannelQuality);
+            compressedChannels.red = details.CompressedMatrix;
+            compressionDetails.RedChannelNonzeroElementsNumberOriginal = compressionDetails.RedChannelNonzeroElementsNumberOriginal + details.nonzeroElementsNumberOriginal;
+            compressionDetails.RedChannelNonzeroElementsNumberCompressed = compressionDetails.RedChannelNonzeroElementsNumberCompressed + details.nonzeroElementsNumberCompressed;
+            // Green
+            details = compressMatrix(source.greenChannel(), this.compressionTemplate.GreenChannelQuality);
+            compressedChannels.green = details.CompressedMatrix;
+            compressionDetails.GreenChannelNonzeroElementsNumberOriginal = compressionDetails.GreenChannelNonzeroElementsNumberOriginal + details.nonzeroElementsNumberOriginal;
+            compressionDetails.GreenChannelNonzeroElementsNumberCompressed = compressionDetails.GreenChannelNonzeroElementsNumberCompressed + details.nonzeroElementsNumberCompressed;
+            // Blue
+            details = compressMatrix(source.blueChannel(), this.compressionTemplate.BlueChannelQuality);
+            compressedChannels.blue = details.CompressedMatrix;
+            compressionDetails.BlueChannelNonzeroElementsNumberOriginal = compressionDetails.BlueChannelNonzeroElementsNumberOriginal + details.nonzeroElementsNumberOriginal;
+            compressionDetails.BlueChannelNonzeroElementsNumberCompressed = compressionDetails.BlueChannelNonzeroElementsNumberCompressed + details.nonzeroElementsNumberCompressed;
+
             return compressedChannels;
         }
 
-        private double[][] compressMatrix(double[][] matrix, int quality)
+        private class MatrixCompressionDetails
+        {
+            public double[][] CompressedMatrix { get; set; }
+            public int nonzeroElementsNumberOriginal { get; set; }
+            public int nonzeroElementsNumberCompressed { get; set; }
+        }
+
+        private MatrixCompressionDetails compressMatrix(double[][] matrix, int quality)
         {
             int croppedHeight = (matrix.Length / HaarCompression.boxSize) * HaarCompression.boxSize;
             double[][] compressedMatrix = new double[croppedHeight][];
@@ -98,6 +101,7 @@ namespace image_compression
                 compressedMatrix[i] = new double[croppedWidth];
             }
 
+            MatrixCompressionDetails details = new MatrixCompressionDetails();
             for (int i = 0; i + HaarCompression.boxSize <= compressedMatrix.Length; i += HaarCompression.boxSize)
             {
                 for (int j = 0; j + HaarCompression.boxSize <= compressedMatrix[i].Length; j += HaarCompression.boxSize)
@@ -105,12 +109,17 @@ namespace image_compression
                     double[][] box = getBox(matrix, i, j);
                     double[][] compressedBox = haarCompression(box);
 
-                    threshold(ref compressedBox, quality);
+                    Tuple<int, int> thresholdDetails = threshold(ref compressedBox, quality);
+                    details.nonzeroElementsNumberOriginal = details.nonzeroElementsNumberOriginal + thresholdDetails.Item1;
+                    details.nonzeroElementsNumberCompressed = details.nonzeroElementsNumberCompressed + thresholdDetails.Item2;
+
                     putBox(compressedMatrix, compressedBox, i, j);
                 }
             }
 
-            return compressedMatrix;
+            details.CompressedMatrix = compressedMatrix;
+
+            return details;
         }
 
         private double[][] getBox(double[][] matrix, int startTopIndex, int startLeftIndex)
@@ -243,11 +252,12 @@ namespace image_compression
             return matrix;
         }
 
-        private void threshold(ref double[][] matrix, int quality)
+        private Tuple<int, int> threshold(ref double[][] matrix, int quality)
         {
             List<MatrixElement> elements = new List<MatrixElement>();
 
-            int nonZeroPixelsCounterOriginal = 0;
+            int nonzeroOriginalNumber = 0;
+            int thrown = 0;
 
             for (int i = 0; i < HaarCompression.boxSize; ++i)
             {
@@ -255,28 +265,25 @@ namespace image_compression
                 {
                     if (Math.Abs(matrix[i][j]) > 0)
                     {
-                        ++nonZeroPixelsCounterOriginal;
+                        ++nonzeroOriginalNumber;
                         elements.Add(new MatrixElement(i, j, matrix[i][j]));
                     }
                 }
-
-
-                elements.Sort();
-
-                int percentToThrowAway = (100 - quality);
-                int elementsToThrowAway = (int)((elements.Count / 100.0) * (percentToThrowAway));
-
-                int thrownCount = 0;
-                while (thrownCount < elementsToThrowAway && thrownCount < elements.Count)
-                {
-                    Tuple<Int32, Int32> pos = elements[thrownCount].getPosition();
-                    matrix[pos.Item1][pos.Item2] = 0;
-                    ++thrownCount;
-                }
-
-                nonZeroOriginal += nonZeroPixelsCounterOriginal;
-                nonZeroCompressed += nonZeroPixelsCounterOriginal - thrownCount;
             }
+                
+            elements.Sort();
+
+            int percentToThrowAway = (100 - quality);
+            int throwLimit = (int)((elements.Count / 100.0) * (percentToThrowAway));
+                            
+            while (thrown < throwLimit && thrown < elements.Count)
+            {
+                Tuple<int, int> pos = elements[thrown].getPosition();
+                matrix[pos.Item1][pos.Item2] = 0;
+                ++thrown;
+            }
+
+            return new Tuple<int, int>(nonzeroOriginalNumber, nonzeroOriginalNumber - thrown);
         }
 
         struct MatrixElement : IComparable<MatrixElement>

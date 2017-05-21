@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompressionInfo.cs" />
+    <Compile Include="ImageCompressionDetails.cs" />
     <Compile Include="CompressionProcessBuilder.cs" />
     <Compile Include="HaarCompression.cs" />
     <Compile Include="ImageCompressionForm.cs">

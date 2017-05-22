@@ -42,9 +42,9 @@
             this.goWorkButton = new System.Windows.Forms.Button();
             this.greenChannelQualityUpDown = new System.Windows.Forms.NumericUpDown();
             this.redChannelQualityUpDown = new System.Windows.Forms.NumericUpDown();
-            this.redChannelLabel = new System.Windows.Forms.Label();
+            this.yChannelLabel = new System.Windows.Forms.Label();
             this.greenChannelLabel = new System.Windows.Forms.Label();
-            this.blueChannelLabel = new System.Windows.Forms.Label();
+            this.crChannelLabel = new System.Windows.Forms.Label();
             this.statisticsGroupBox = new System.Windows.Forms.GroupBox();
             this.statisticsLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.originalImageBox)).BeginInit();
@@ -125,7 +125,7 @@
             // 
             // blueChannelQualityUpDown
             // 
-            this.blueChannelQualityUpDown.Location = new System.Drawing.Point(632, 237);
+            this.blueChannelQualityUpDown.Location = new System.Drawing.Point(614, 237);
             this.blueChannelQualityUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -144,11 +144,11 @@
             // qualityLabel
             // 
             this.qualityLabel.AutoSize = true;
-            this.qualityLabel.Location = new System.Drawing.Point(616, 160);
+            this.qualityLabel.Location = new System.Drawing.Point(600, 156);
             this.qualityLabel.Name = "qualityLabel";
-            this.qualityLabel.Size = new System.Drawing.Size(53, 13);
+            this.qualityLabel.Size = new System.Drawing.Size(98, 13);
             this.qualityLabel.TabIndex = 6;
-            this.qualityLabel.Text = "Quality, %";
+            this.qualityLabel.Text = "Channels quality, %";
             // 
             // groupBox1
             // 
@@ -181,7 +181,7 @@
             // 
             // greenChannelQualityUpDown
             // 
-            this.greenChannelQualityUpDown.Location = new System.Drawing.Point(632, 211);
+            this.greenChannelQualityUpDown.Location = new System.Drawing.Point(614, 211);
             this.greenChannelQualityUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -198,7 +198,7 @@
             // 
             // redChannelQualityUpDown
             // 
-            this.redChannelQualityUpDown.Location = new System.Drawing.Point(632, 185);
+            this.redChannelQualityUpDown.Location = new System.Drawing.Point(614, 185);
             this.redChannelQualityUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -213,32 +213,32 @@
             0,
             0});
             // 
-            // redChannelLabel
+            // yChannelLabel
             // 
-            this.redChannelLabel.AutoSize = true;
-            this.redChannelLabel.Location = new System.Drawing.Point(586, 187);
-            this.redChannelLabel.Name = "redChannelLabel";
-            this.redChannelLabel.Size = new System.Drawing.Size(27, 13);
-            this.redChannelLabel.TabIndex = 17;
-            this.redChannelLabel.Text = "Red";
+            this.yChannelLabel.AutoSize = true;
+            this.yChannelLabel.Location = new System.Drawing.Point(594, 187);
+            this.yChannelLabel.Name = "yChannelLabel";
+            this.yChannelLabel.Size = new System.Drawing.Size(14, 13);
+            this.yChannelLabel.TabIndex = 17;
+            this.yChannelLabel.Text = "Y";
             // 
             // greenChannelLabel
             // 
             this.greenChannelLabel.AutoSize = true;
-            this.greenChannelLabel.Location = new System.Drawing.Point(586, 213);
+            this.greenChannelLabel.Location = new System.Drawing.Point(594, 213);
             this.greenChannelLabel.Name = "greenChannelLabel";
-            this.greenChannelLabel.Size = new System.Drawing.Size(36, 13);
+            this.greenChannelLabel.Size = new System.Drawing.Size(20, 13);
             this.greenChannelLabel.TabIndex = 18;
-            this.greenChannelLabel.Text = "Green";
+            this.greenChannelLabel.Text = "Cb";
             // 
-            // blueChannelLabel
+            // crChannelLabel
             // 
-            this.blueChannelLabel.AutoSize = true;
-            this.blueChannelLabel.Location = new System.Drawing.Point(586, 239);
-            this.blueChannelLabel.Name = "blueChannelLabel";
-            this.blueChannelLabel.Size = new System.Drawing.Size(28, 13);
-            this.blueChannelLabel.TabIndex = 19;
-            this.blueChannelLabel.Text = "Blue";
+            this.crChannelLabel.AutoSize = true;
+            this.crChannelLabel.Location = new System.Drawing.Point(594, 239);
+            this.crChannelLabel.Name = "crChannelLabel";
+            this.crChannelLabel.Size = new System.Drawing.Size(17, 13);
+            this.crChannelLabel.TabIndex = 19;
+            this.crChannelLabel.Text = "Cr";
             // 
             // statisticsGroupBox
             // 
@@ -265,9 +265,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1792, 633);
             this.Controls.Add(this.statisticsGroupBox);
-            this.Controls.Add(this.blueChannelLabel);
+            this.Controls.Add(this.crChannelLabel);
             this.Controls.Add(this.greenChannelLabel);
-            this.Controls.Add(this.redChannelLabel);
+            this.Controls.Add(this.yChannelLabel);
             this.Controls.Add(this.redChannelQualityUpDown);
             this.Controls.Add(this.greenChannelQualityUpDown);
             this.Controls.Add(this.goWorkButton);
@@ -310,9 +310,9 @@
         private System.Windows.Forms.Button goWorkButton;
         private System.Windows.Forms.NumericUpDown greenChannelQualityUpDown;
         private System.Windows.Forms.NumericUpDown redChannelQualityUpDown;
-        private System.Windows.Forms.Label redChannelLabel;
+        private System.Windows.Forms.Label yChannelLabel;
         private System.Windows.Forms.Label greenChannelLabel;
-        private System.Windows.Forms.Label blueChannelLabel;
+        private System.Windows.Forms.Label crChannelLabel;
         private System.Windows.Forms.GroupBox statisticsGroupBox;
         private System.Windows.Forms.Label statisticsLabel;
     }

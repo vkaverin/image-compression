@@ -45,17 +45,17 @@ namespace image_compression
 
         private void estimateErrors(ChannelsContainer original, ChannelsContainer restored)
         {
-            // Red channel
-            compressionDetails.RedChannelMSE = mse(original.redChannel(), restored.redChannel());
-            compressionDetails.RedChannelPSNR = psnr(compressionDetails.RedChannelMSE);
+            // Y channel
+            compressionDetails.YChannelMSE = mse(original.YChannel(), restored.YChannel());
+            compressionDetails.YChannelPSNR = psnr(compressionDetails.YChannelMSE);
 
-            // Green Channel
-            compressionDetails.GreenChannelMSE = mse(original.greenChannel(), restored.greenChannel());
-            compressionDetails.GreenChannelPSNR = psnr(compressionDetails.GreenChannelMSE);
+            // Cr Channel
+            compressionDetails.CbChannelMSE = mse(original.CbChannel(), restored.CbChannel());
+            compressionDetails.CbChannelPSNR = psnr(compressionDetails.CbChannelMSE);
 
-            // Blue channel
-            compressionDetails.BlueChannelMSE = mse(original.blueChannel(), restored.blueChannel());
-            compressionDetails.BlueChannelPSNR = psnr(compressionDetails.BlueChannelMSE);
+            // Cb channel
+            compressionDetails.CrChannelMSE = mse(original.CrChannel(), restored.CrChannel());
+            compressionDetails.CrChannelPSNR = psnr(compressionDetails.CrChannelMSE);
         }
 
         private double mse(double[][] original, double[][] restored)
@@ -75,7 +75,7 @@ namespace image_compression
 
         private double psnr(double mse)
         {
-            return 10 * Math.Log10(255 * 255 / mse);
+            return 10 * Math.Log(255 * 255 / mse);
         }
 
         private ChannelsContainer splitChannels(Image image)
@@ -89,11 +89,13 @@ namespace image_compression
             {
                 for (int j = 0; j < image.Width; ++j)
                 {
-                    channels.red[i][j] = sourceBitmap.GetPixel(j, i).R;
-                    channels.green[i][j] = sourceBitmap.GetPixel(j, i).G;
-                    channels.blue[i][j] = sourceBitmap.GetPixel(j, i).B;
+                    channels.r[i][j] = sourceBitmap.GetPixel(j, i).R;
+                    channels.g[i][j] = sourceBitmap.GetPixel(j, i).G;
+                    channels.b[i][j] = sourceBitmap.GetPixel(j, i).B;
                 }
             }
+
+            channels.promoteYCbCr();
 
             return channels;
         }
@@ -102,21 +104,21 @@ namespace image_compression
         {
             ChannelsContainer compressedChannels = new ChannelsContainer((source.Height / HaarCompression.boxSize) * HaarCompression.boxSize, (source.Width / HaarCompression.boxSize) * HaarCompression.boxSize);
             
-            // Red
-            MatrixCompressionDetails details = compressMatrix(source.redChannel(), this.compressionTemplate.RedChannelQuality);
-            compressedChannels.red = details.CompressedMatrix;
-            compressionDetails.RedChannelNonzeroElementsNumberOriginal = compressionDetails.RedChannelNonzeroElementsNumberOriginal + details.nonzeroElementsNumberOriginal;
-            compressionDetails.RedChannelNonzeroElementsNumberCompressed = compressionDetails.RedChannelNonzeroElementsNumberCompressed + details.nonzeroElementsNumberCompressed;
-            // Green
-            details = compressMatrix(source.greenChannel(), this.compressionTemplate.GreenChannelQuality);
-            compressedChannels.green = details.CompressedMatrix;
-            compressionDetails.GreenChannelNonzeroElementsNumberOriginal = compressionDetails.GreenChannelNonzeroElementsNumberOriginal + details.nonzeroElementsNumberOriginal;
-            compressionDetails.GreenChannelNonzeroElementsNumberCompressed = compressionDetails.GreenChannelNonzeroElementsNumberCompressed + details.nonzeroElementsNumberCompressed;
-            // Blue
-            details = compressMatrix(source.blueChannel(), this.compressionTemplate.BlueChannelQuality);
-            compressedChannels.blue = details.CompressedMatrix;
-            compressionDetails.BlueChannelNonzeroElementsNumberOriginal = compressionDetails.BlueChannelNonzeroElementsNumberOriginal + details.nonzeroElementsNumberOriginal;
-            compressionDetails.BlueChannelNonzeroElementsNumberCompressed = compressionDetails.BlueChannelNonzeroElementsNumberCompressed + details.nonzeroElementsNumberCompressed;
+            // Y
+            MatrixCompressionDetails details = compressMatrix(source.YChannel(), this.compressionTemplate.YChannelQuality);
+            compressedChannels.y = details.CompressedMatrix;
+            compressionDetails.YChannelNonzeroElementsNumberOriginal = compressionDetails.YChannelNonzeroElementsNumberOriginal + details.nonzeroElementsNumberOriginal;
+            compressionDetails.YChannelNonzeroElementsNumberCompressed = compressionDetails.YChannelNonzeroElementsNumberCompressed + details.nonzeroElementsNumberCompressed;
+            // Cb
+            details = compressMatrix(source.CbChannel(), this.compressionTemplate.CbChannelQuality);
+            compressedChannels.cb = details.CompressedMatrix;
+            compressionDetails.CbChannelNonzeroElementsNumberOriginal = compressionDetails.CbChannelNonzeroElementsNumberOriginal + details.nonzeroElementsNumberOriginal;
+            compressionDetails.CbChannelNonzeroElementsNumberCompressed = compressionDetails.CbChannelNonzeroElementsNumberCompressed + details.nonzeroElementsNumberCompressed;
+            // Cr
+            details = compressMatrix(source.CrChannel(), this.compressionTemplate.CrChannelQuality);
+            compressedChannels.cr = details.CompressedMatrix;
+            compressionDetails.CrChannelNonzeroElementsNumberOriginal = compressionDetails.CrChannelNonzeroElementsNumberOriginal + details.nonzeroElementsNumberOriginal;
+            compressionDetails.CrChannelNonzeroElementsNumberCompressed = compressionDetails.CrChannelNonzeroElementsNumberCompressed + details.nonzeroElementsNumberCompressed;
 
             return compressedChannels;
         }
@@ -192,9 +194,11 @@ namespace image_compression
         private ChannelsContainer restoreChannels(ChannelsContainer source)
         {
             ChannelsContainer compressedChannels = new ChannelsContainer(source.Height, source.Width);
-            compressedChannels.red = restoreMatrix(source.redChannel());
-            compressedChannels.green = restoreMatrix(source.greenChannel());
-            compressedChannels.blue = restoreMatrix(source.blueChannel());
+            compressedChannels.allocateMemory();
+            compressedChannels.y = restoreMatrix(source.YChannel());
+            compressedChannels.cb = restoreMatrix(source.CbChannel());
+            compressedChannels.cr = restoreMatrix(source.CrChannel());
+            compressedChannels.promoteRGB();
             return compressedChannels;
         }
 
@@ -205,7 +209,7 @@ namespace image_compression
             {
                 for (int j = 0; j < channels.Width; ++j)
                 {
-                    Color color = asColor(channels.red[i][j], channels.green[i][j], channels.blue[i][j]);
+                    Color color = asColor(channels.r[i][j], channels.g[i][j], channels.b[i][j]);
                     output.SetPixel(j, i, color);
                 }
             }
@@ -433,26 +437,27 @@ namespace image_compression
             public int Width { get; }
             public int Height { get; }
 
-            public double[][] red;
-            // public double[][] Red { get; set; }
-            public double[][] green;
-            // public double[][] Green { get; set; }
-            public double[][] blue;
-            // public double[][] Blue { get; set; }
+            public double[][] y;
+            public double[][] cb;
+            public double[][] cr;
 
-            public double[][] redChannel()
+            public int[][] r;
+            public int[][] g;
+            public int[][] b;
+
+            public double[][] YChannel()
             {
-                return this.red;
+                return this.y;
             }
 
-            public double[][] greenChannel()
+            public double[][] CbChannel()
             {
-                return this.green;
+                return this.cb;
             }
 
-            public double[][] blueChannel()
+            public double[][] CrChannel()
             {
-                return this.blue;
+                return this.cr;
             }
 
             public ChannelsContainer()
@@ -467,20 +472,58 @@ namespace image_compression
 
             public void allocateMemory()
             {
-                init(out this.red);
-                init(out this.green);
-                init(out this.blue);
+                alloc(out this.y);
+                alloc(out this.cb);
+                alloc(out this.cr);
+                alloc(out this.r);
+                alloc(out this.g);
+                alloc(out this.b);
             }
 
-            private void init(out double[][] matrix)
+            private void alloc<T>(out T[][] matrix)
             {
-                double[][] tmp = new double[this.Height][];
+                T[][] tmp = new T[this.Height][];
                 for (int i = 0; i < this.Height; ++i)
                 {
-                    tmp[i] = new double[this.Width];
+                    tmp[i] = new T[this.Width];
                 }
 
                 matrix = tmp;
+            }
+
+            public void promoteRGB()
+            {
+                for (int i = 0; i < this.Height; ++i)
+                {
+                    for (int j = 0; j < this.Width; ++j)
+                    {
+                        double y = this.y[i][j];
+                        double cb = this.cb[i][j];
+                        double cr = this.cr[i][j];
+
+                        this.r[i][j] = (int) (y + 1.402 * (cr - 128));
+                        this.g[i][j] = (int)(y - 0.344136 * (cb - 128) - 0.714136 * (cr - 128));
+                        this.b[i][j] = (int)(y + 1.772 * (cb - 128));
+                    }
+                }
+            }
+
+            public void promoteYCbCr()
+            {
+                for (int i = 0; i < this.Height; ++i)
+                {
+                    for (int j = 0; j < this.Width; ++j)
+                    {
+                        int r = this.r[i][j];
+                        int g = this.g[i][j];
+                        int b = this.b[i][j];
+
+                        this.y[i][j] = 0.299 * r + 0.587 * g + 0.114 * b;
+                        this.cb[i][j] = 128 - 0.168736 * r - 0.33264 * g + 0.5 * b;
+                        this.cr[i][j] = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
+                    }
+                }
+                        
             }
         }
     }

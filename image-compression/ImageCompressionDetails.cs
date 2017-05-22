@@ -5,32 +5,32 @@ public class ImageCompressionDetails
     public int Quality { get; set; }
     public Image SourceImage { get; set; }
     public Image CompressedImage { get; set; }
-    public int RedChannelNonzeroElementsNumberOriginal { get; set; }
-    public int RedChannelNonzeroElementsNumberCompressed { get; set; }
-    public int GreenChannelNonzeroElementsNumberOriginal { get; set; }
-    public int GreenChannelNonzeroElementsNumberCompressed { get; set; }
-    public int BlueChannelNonzeroElementsNumberOriginal { get; set; }
-    public int BlueChannelNonzeroElementsNumberCompressed { get; set; }
-    public double RedChannelMSE { get; set; }
-    public double RedChannelPSNR { get; set; }
-    public double GreenChannelMSE { get; set; }
-    public double GreenChannelPSNR { get; set; }
-    public double BlueChannelMSE { get; set; }
-    public double BlueChannelPSNR { get; set; }
+    public int YChannelNonzeroElementsNumberOriginal { get; set; }
+    public int YChannelNonzeroElementsNumberCompressed { get; set; }
+    public int CbChannelNonzeroElementsNumberOriginal { get; set; }
+    public int CbChannelNonzeroElementsNumberCompressed { get; set; }
+    public int CrChannelNonzeroElementsNumberOriginal { get; set; }
+    public int CrChannelNonzeroElementsNumberCompressed { get; set; }
+    public double YChannelMSE { get; set; }
+    public double YChannelPSNR { get; set; }
+    public double CbChannelMSE { get; set; }
+    public double CbChannelPSNR { get; set; }
+    public double CrChannelMSE { get; set; }
+    public double CrChannelPSNR { get; set; }
     public long CompressionTime { get; set; }
 
-    public double RedChannelCompressionRatio()
+    public double YChannelCompressionRatio()
     {
-        return ((double) RedChannelNonzeroElementsNumberOriginal) / this.RedChannelNonzeroElementsNumberCompressed;
+        return ((double) YChannelNonzeroElementsNumberOriginal) / this.YChannelNonzeroElementsNumberCompressed;
     }
 
-    public double GreenChannelCompressionRatio()
+    public double CbChannelCompressionRatio()
     {
-        return ((double)GreenChannelNonzeroElementsNumberOriginal) / this.GreenChannelNonzeroElementsNumberCompressed;
+        return ((double)CbChannelNonzeroElementsNumberOriginal) / this.CbChannelNonzeroElementsNumberCompressed;
     }
 
-    public double BlueChannelCompressionRatio()
+    public double CrChannelCompressionRatio()
     {
-        return ((double)BlueChannelNonzeroElementsNumberOriginal) / this.BlueChannelNonzeroElementsNumberCompressed;
+        return ((double)CrChannelNonzeroElementsNumberOriginal) / this.CrChannelNonzeroElementsNumberCompressed;
     }
 }

@@ -315,7 +315,7 @@ namespace image_compression
             elements.Sort();
 
             int percentToThrowAway = (100 - quality);
-            int throwLimit = (int)((elements.Count / 100.0) * (percentToThrowAway));
+            int throwLimit = percentToThrowAway < 100 ? (int)((elements.Count / 100.0) * (percentToThrowAway)) : percentToThrowAway;
                             
             while (thrown < throwLimit && thrown < elements.Count)
             {

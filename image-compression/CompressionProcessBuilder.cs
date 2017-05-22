@@ -7,9 +7,9 @@ namespace image_compression
     {
         public Image SourceImage { get; set; }
 
-        public int RedChannelQuality { get; set; }
-        public int GreenChannelQuality { get; set; }
-        public int BlueChannelQuality { get; set; }
+        public int YChannelQuality { get; set; }
+        public int CbChannelQuality { get; set; }
+        public int CrChannelQuality { get; set; }
     }
 
     public class CompressionTemplateBuilder
@@ -27,27 +27,27 @@ namespace image_compression
             this.compressionTemplate.SourceImage = image;
         }
 
-        public CompressionTemplateBuilder withRedQuality(int quality)
+        public CompressionTemplateBuilder withYQuality(int quality)
         {
             validateQuality(quality);
 
-            this.compressionTemplate.RedChannelQuality = quality;
+            this.compressionTemplate.YChannelQuality = quality;
             return this;
         }
 
-        public CompressionTemplateBuilder withGreenQuality(int quality)
+        public CompressionTemplateBuilder withCbQuality(int quality)
         {
             validateQuality(quality);
 
-            this.compressionTemplate.GreenChannelQuality = quality;
+            this.compressionTemplate.CbChannelQuality = quality;
             return this;
         }
 
-        public CompressionTemplateBuilder withBlueQuality(int quality)
+        public CompressionTemplateBuilder withCrQuality(int quality)
         {
             validateQuality(quality);
 
-            this.compressionTemplate.BlueChannelQuality = quality;
+            this.compressionTemplate.CrChannelQuality = quality;
             return this;
         }
 

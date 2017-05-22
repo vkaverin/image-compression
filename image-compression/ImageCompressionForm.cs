@@ -24,9 +24,9 @@ namespace image_compression
             compressedImageFlowLayoutPanel.Controls.Add(compressedImageBox);
 
             // Labels
-            redChannelLabel.Hide();
+            yChannelLabel.Hide();
             greenChannelLabel.Hide();
-            blueChannelLabel.Hide();
+            crChannelLabel.Hide();
             compressionInProgressLabel.Hide();
             qualityLabel.Hide();
             statisticsGroupBox.Hide();
@@ -54,11 +54,11 @@ namespace image_compression
         {
             compressedImageBox.Hide();
 
-            redChannelLabel.Show();
+            yChannelLabel.Show();
             redChannelQualityUpDown.Show();
             greenChannelLabel.Show();
             greenChannelQualityUpDown.Show();
-            blueChannelLabel.Show();
+            crChannelLabel.Show();
             blueChannelQualityUpDown.Show();
 
             goWorkButton.Show();
@@ -110,24 +110,24 @@ namespace image_compression
         {
             StringBuilder statistics = new StringBuilder();
             statistics.AppendFormat("Compression took {0} second(s)\n", compressionDetails.CompressionTime / 1000.0);
-            statistics.AppendFormat("\nRed channel:\n");
-            statistics.AppendFormat("  Number of nonzero elements in original image: {0}\n", compressionDetails.RedChannelNonzeroElementsNumberOriginal);
-            statistics.AppendFormat("  Number of nonzero elements in compressed image: {0}\n", compressionDetails.RedChannelNonzeroElementsNumberCompressed);
-            statistics.AppendFormat("  Compression ratio: {0:F3}\n", compressionDetails.RedChannelCompressionRatio());
-            statistics.AppendFormat("  MSE: {0:F3}\n", compressionDetails.RedChannelMSE);
-            statistics.AppendFormat("  PSRN: {0:F3}\n", compressionDetails.RedChannelPSNR);
-            statistics.AppendFormat("\nGreen channel:\n");
-            statistics.AppendFormat("  Number of nonzero elements in original image: {0}\n", compressionDetails.GreenChannelNonzeroElementsNumberOriginal);
-            statistics.AppendFormat("  Number of nonzero elements in compressed image: {0}\n", compressionDetails.GreenChannelNonzeroElementsNumberCompressed);
-            statistics.AppendFormat("  Compression ratio: {0:F3}\n", compressionDetails.GreenChannelCompressionRatio());
-            statistics.AppendFormat("  MSE: {0:F3}\n", compressionDetails.GreenChannelMSE);
-            statistics.AppendFormat("  PSRN: {0:F3}\n", compressionDetails.GreenChannelPSNR);
-            statistics.AppendFormat("\nBlue channel:\n");
-            statistics.AppendFormat("  Number of nonzero elements in original image: {0}\n", compressionDetails.BlueChannelNonzeroElementsNumberOriginal);
-            statistics.AppendFormat("  Number of nonzero elements in compressed image: {0}\n", compressionDetails.BlueChannelNonzeroElementsNumberCompressed);
-            statistics.AppendFormat("  Compression ratio: {0:F3}\n", compressionDetails.BlueChannelCompressionRatio());
-            statistics.AppendFormat("  MSE: {0:F3}\n", compressionDetails.BlueChannelMSE);
-            statistics.AppendFormat("  PSRN: {0:F3}\n", compressionDetails.BlueChannelPSNR);
+            statistics.AppendFormat("\nY channel:\n");
+            statistics.AppendFormat("  Number of nonzero elements in original image: {0}\n", compressionDetails.YChannelNonzeroElementsNumberOriginal);
+            statistics.AppendFormat("  Number of nonzero elements in compressed image: {0}\n", compressionDetails.YChannelNonzeroElementsNumberCompressed);
+            statistics.AppendFormat("  Compression ratio: {0:F3}\n", compressionDetails.YChannelCompressionRatio());
+            statistics.AppendFormat("  MSE: {0:F3}\n", compressionDetails.YChannelMSE);
+            statistics.AppendFormat("  PSRN: {0:F3}\n", compressionDetails.YChannelPSNR);
+            statistics.AppendFormat("\nCb channel:\n");
+            statistics.AppendFormat("  Number of nonzero elements in original image: {0}\n", compressionDetails.CbChannelNonzeroElementsNumberOriginal);
+            statistics.AppendFormat("  Number of nonzero elements in compressed image: {0}\n", compressionDetails.CbChannelNonzeroElementsNumberCompressed);
+            statistics.AppendFormat("  Compression ratio: {0:F3}\n", compressionDetails.CbChannelCompressionRatio());
+            statistics.AppendFormat("  MSE: {0:F3}\n", compressionDetails.CbChannelMSE);
+            statistics.AppendFormat("  PSRN: {0:F3}\n", compressionDetails.CbChannelPSNR);
+            statistics.AppendFormat("\nCr channel:\n");
+            statistics.AppendFormat("  Number of nonzero elements in original image: {0}\n", compressionDetails.CrChannelNonzeroElementsNumberOriginal);
+            statistics.AppendFormat("  Number of nonzero elements in compressed image: {0}\n", compressionDetails.CrChannelNonzeroElementsNumberCompressed);
+            statistics.AppendFormat("  Compression ratio: {0:F3}\n", compressionDetails.CrChannelCompressionRatio());
+            statistics.AppendFormat("  MSE: {0:F3}\n", compressionDetails.CrChannelMSE);
+            statistics.AppendFormat("  PSRN: {0:F3}\n", compressionDetails.CrChannelPSNR);
             statisticsLabel.Text = statistics.ToString();
             statisticsGroupBox.Show();
             statisticsLabel.Show();
@@ -149,9 +149,9 @@ namespace image_compression
             int greenQuality = (int) greenChannelQualityUpDown.Value;
             int blueQuality = (int) blueChannelQualityUpDown.Value;
             CompressionTemplate compressionTemplate = HaarCompression.makeCompressionTemplateFor(originalImageBox.Image)
-                .withRedQuality(redQuality)
-                .withGreenQuality(greenQuality)
-                .withBlueQuality(blueQuality)
+                .withYQuality(redQuality)
+                .withCbQuality(greenQuality)
+                .withCrQuality(blueQuality)
                 .make();
             ImageCompressionDetails compressionDetails = HaarCompression.process(compressionTemplate);
             compressedImageBox.Image = compressionDetails.CompressedImage;

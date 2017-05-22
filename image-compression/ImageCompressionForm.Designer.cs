@@ -126,11 +126,6 @@
             // blueChannelQualityUpDown
             // 
             this.blueChannelQualityUpDown.Location = new System.Drawing.Point(614, 237);
-            this.blueChannelQualityUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.blueChannelQualityUpDown.Name = "blueChannelQualityUpDown";
             this.blueChannelQualityUpDown.Size = new System.Drawing.Size(72, 20);
             this.blueChannelQualityUpDown.TabIndex = 5;
@@ -182,11 +177,6 @@
             // greenChannelQualityUpDown
             // 
             this.greenChannelQualityUpDown.Location = new System.Drawing.Point(614, 211);
-            this.greenChannelQualityUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.greenChannelQualityUpDown.Name = "greenChannelQualityUpDown";
             this.greenChannelQualityUpDown.Size = new System.Drawing.Size(73, 20);
             this.greenChannelQualityUpDown.TabIndex = 15;
@@ -199,11 +189,6 @@
             // redChannelQualityUpDown
             // 
             this.redChannelQualityUpDown.Location = new System.Drawing.Point(614, 185);
-            this.redChannelQualityUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.redChannelQualityUpDown.Name = "redChannelQualityUpDown";
             this.redChannelQualityUpDown.Size = new System.Drawing.Size(73, 20);
             this.redChannelQualityUpDown.TabIndex = 16;

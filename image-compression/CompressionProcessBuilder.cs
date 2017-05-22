@@ -69,7 +69,7 @@ namespace image_compression
 
         private void validateQuality(int quality)
         {
-            if (quality < 1)
+            if (quality < 0)
             {
                 throw new ArgumentException("Quality can not be less than one percent.");
             }

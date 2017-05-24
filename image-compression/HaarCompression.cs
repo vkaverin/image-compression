@@ -31,10 +31,18 @@ namespace image_compression
         private ImageCompressionDetails process()
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
-            ChannelsContainer channels = splitChannels(compressionTemplate.SourceImage);
-            ChannelsContainer compressedChannels = compressChannels(channels);
-            ChannelsContainer restoredChannels = restoreChannels(compressedChannels);
-            Image compressedImage = restoreImage(restoredChannels);
+
+            //**********************************************************************
+            // Idea: Divide and conquer by boxes 8x8.
+            //**********************************************************************
+            // todo: Split Haar compression into image and matrix parts. 
+            // Haar is for matrixes only, it doesn't care about any images.
+            //**********************************************************************
+
+            YCbCrChannelsContainer channels = splitChannels(compressionTemplate.SourceImage);
+            YCbCrChannelsContainer compressedChannels = compressChannels(channels);
+            YCbCrChannelsContainer restoredChannels = restoreChannels(compressedChannels);
+            Image compressedImage = restoreImage(ChannelsTransformer.yCbCrToRGB(restoredChannels));
             this.compressionDetails.CompressionTime = stopwatch.ElapsedMilliseconds;
             this.compressionDetails.CompressedImage = compressedImage;
 
@@ -43,7 +51,7 @@ namespace image_compression
             return compressionDetails;
         }
 
-        private void estimateErrors(ChannelsContainer original, ChannelsContainer restored)
+        private void estimateErrors(YCbCrChannelsContainer original, YCbCrChannelsContainer restored)
         {
             // Y channel
             compressionDetails.YChannelMSE = mse(original.YChannel(), restored.YChannel());
@@ -78,45 +86,42 @@ namespace image_compression
             return 10 * Math.Log(255 * 255 / mse);
         }
 
-        private ChannelsContainer splitChannels(Image image)
+        private YCbCrChannelsContainer splitChannels(Image image)
         {
             Bitmap sourceBitmap = new Bitmap(image);
 
-            ChannelsContainer channels = new ChannelsContainer(image.Height, image.Width);
-            channels.allocateMemory();
+            RGBChannelsContainer rgbChannels = new RGBChannelsContainer(image.Height, image.Width);
 
             for (int i = 0; i < image.Height; ++i)
             {
                 for (int j = 0; j < image.Width; ++j)
                 {
-                    channels.r[i][j] = sourceBitmap.GetPixel(j, i).R;
-                    channels.g[i][j] = sourceBitmap.GetPixel(j, i).G;
-                    channels.b[i][j] = sourceBitmap.GetPixel(j, i).B;
+                    rgbChannels.setRed(i, j, sourceBitmap.GetPixel(j, i).R);
+                    rgbChannels.setGreen(i, j, sourceBitmap.GetPixel(j, i).G);
+                    rgbChannels.setBlue(i, j, sourceBitmap.GetPixel(j, i).B);
                 }
             }
 
-            channels.promoteYCbCr();
-
-            return channels;
+            return ChannelsTransformer.rgbToYCbCr(rgbChannels);
         }
 
-        private ChannelsContainer compressChannels(ChannelsContainer source)
+        private YCbCrChannelsContainer compressChannels(YCbCrChannelsContainer source)
         {
-            ChannelsContainer compressedChannels = new ChannelsContainer((source.Height / HaarCompression.boxSize) * HaarCompression.boxSize, (source.Width / HaarCompression.boxSize) * HaarCompression.boxSize);
+            YCbCrChannelsContainer compressedChannels = new YCbCrChannelsContainer((source.Height / HaarCompression.boxSize) * HaarCompression.boxSize, (source.Width / HaarCompression.boxSize) * HaarCompression.boxSize);
             
             // Y
             MatrixCompressionDetails details = compressMatrix(source.YChannel(), this.compressionTemplate.YChannelQuality);
-            compressedChannels.y = details.CompressedMatrix;
+            compressedChannels.setY(details.CompressedMatrix);
             compressionDetails.YChannelNonzeroElementsNumberOriginal = compressionDetails.YChannelNonzeroElementsNumberOriginal + details.nonzeroElementsNumberOriginal;
             compressionDetails.YChannelNonzeroElementsNumberCompressed = compressionDetails.YChannelNonzeroElementsNumberCompressed + details.nonzeroElementsNumberCompressed;
             // Cb
             details = compressMatrix(source.CbChannel(), this.compressionTemplate.CbChannelQuality);
-            compressedChannels.cb = details.CompressedMatrix;
+            compressedChannels.setCb(details.CompressedMatrix);
             compressionDetails.CbChannelNonzeroElementsNumberOriginal = compressionDetails.CbChannelNonzeroElementsNumberOriginal + details.nonzeroElementsNumberOriginal;
             compressionDetails.CbChannelNonzeroElementsNumberCompressed = compressionDetails.CbChannelNonzeroElementsNumberCompressed + details.nonzeroElementsNumberCompressed;
             // Cr
             details = compressMatrix(source.CrChannel(), this.compressionTemplate.CrChannelQuality);
-            compressedChannels.cr = details.CompressedMatrix;
+            compressedChannels.setCr(details.CompressedMatrix);
             compressionDetails.CrChannelNonzeroElementsNumberOriginal = compressionDetails.CrChannelNonzeroElementsNumberOriginal + details.nonzeroElementsNumberOriginal;
             compressionDetails.CrChannelNonzeroElementsNumberCompressed = compressionDetails.CrChannelNonzeroElementsNumberCompressed + details.nonzeroElementsNumberCompressed;
 
@@ -191,25 +196,24 @@ namespace image_compression
             }
         }
 
-        private ChannelsContainer restoreChannels(ChannelsContainer source)
+        private YCbCrChannelsContainer restoreChannels(YCbCrChannelsContainer source)
         {
-            ChannelsContainer compressedChannels = new ChannelsContainer(source.Height, source.Width);
-            compressedChannels.allocateMemory();
-            compressedChannels.y = restoreMatrix(source.YChannel());
-            compressedChannels.cb = restoreMatrix(source.CbChannel());
-            compressedChannels.cr = restoreMatrix(source.CrChannel());
-            compressedChannels.promoteRGB();
+            YCbCrChannelsContainer compressedChannels = new YCbCrChannelsContainer(source.Height, source.Width);
+
+            compressedChannels.setY(restoreMatrix(source.YChannel()));
+            compressedChannels.setCb(restoreMatrix(source.CbChannel()));
+            compressedChannels.setCr(restoreMatrix(source.CrChannel()));
             return compressedChannels;
         }
 
-        private Image restoreImage(ChannelsContainer channels)
+        private Image restoreImage(RGBChannelsContainer channels)
         {
             Bitmap output = new Bitmap(channels.Width, channels.Height);
             for (int i = 0; i < channels.Height; ++i)
             {
                 for (int j = 0; j < channels.Width; ++j)
                 {
-                    Color color = asColor(channels.r[i][j], channels.g[i][j], channels.b[i][j]);
+                    Color color = asColor(channels.getRed(i, j), channels.getGreen(i, j), channels.getBlue(i, j));
                     output.SetPixel(j, i, color);
                 }
             }
@@ -430,101 +434,6 @@ namespace image_compression
             }
 
             return matrix;
-        }
-
-        private class ChannelsContainer
-        {
-            public int Width { get; }
-            public int Height { get; }
-
-            public double[][] y;
-            public double[][] cb;
-            public double[][] cr;
-
-            public int[][] r;
-            public int[][] g;
-            public int[][] b;
-
-            public double[][] YChannel()
-            {
-                return this.y;
-            }
-
-            public double[][] CbChannel()
-            {
-                return this.cb;
-            }
-
-            public double[][] CrChannel()
-            {
-                return this.cr;
-            }
-
-            public ChannelsContainer()
-            {
-            }
-
-            public ChannelsContainer(int height, int width)
-            {
-                this.Width = width;
-                this.Height = height;
-            }
-
-            public void allocateMemory()
-            {
-                alloc(out this.y);
-                alloc(out this.cb);
-                alloc(out this.cr);
-                alloc(out this.r);
-                alloc(out this.g);
-                alloc(out this.b);
-            }
-
-            private void alloc<T>(out T[][] matrix)
-            {
-                T[][] tmp = new T[this.Height][];
-                for (int i = 0; i < this.Height; ++i)
-                {
-                    tmp[i] = new T[this.Width];
-                }
-
-                matrix = tmp;
-            }
-
-            public void promoteRGB()
-            {
-                for (int i = 0; i < this.Height; ++i)
-                {
-                    for (int j = 0; j < this.Width; ++j)
-                    {
-                        double y = this.y[i][j];
-                        double cb = this.cb[i][j];
-                        double cr = this.cr[i][j];
-
-                        this.r[i][j] = (int) (y + 1.402 * (cr - 128));
-                        this.g[i][j] = (int)(y - 0.344136 * (cb - 128) - 0.714136 * (cr - 128));
-                        this.b[i][j] = (int)(y + 1.772 * (cb - 128));
-                    }
-                }
-            }
-
-            public void promoteYCbCr()
-            {
-                for (int i = 0; i < this.Height; ++i)
-                {
-                    for (int j = 0; j < this.Width; ++j)
-                    {
-                        int r = this.r[i][j];
-                        int g = this.g[i][j];
-                        int b = this.b[i][j];
-
-                        this.y[i][j] = 0.299 * r + 0.587 * g + 0.114 * b;
-                        this.cb[i][j] = 128 - 0.168736 * r - 0.33264 * g + 0.5 * b;
-                        this.cr[i][j] = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
-                    }
-                }
-                        
-            }
         }
     }
 }

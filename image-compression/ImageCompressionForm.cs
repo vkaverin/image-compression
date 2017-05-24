@@ -148,12 +148,12 @@ namespace image_compression
             int redQuality = (int) redChannelQualityUpDown.Value;
             int greenQuality = (int) greenChannelQualityUpDown.Value;
             int blueQuality = (int) blueChannelQualityUpDown.Value;
-            CompressionTemplate compressionTemplate = HaarCompression.makeCompressionTemplateFor(originalImageBox.Image)
+            CompressionTemplate compressionTemplate = CompressionTemplateBuildingGuy.forImage(originalImageBox.Image)
                 .withYQuality(redQuality)
                 .withCbQuality(greenQuality)
                 .withCrQuality(blueQuality)
                 .make();
-            ImageCompressionDetails compressionDetails = HaarCompression.process(compressionTemplate);
+            ImageCompressionDetails compressionDetails = ImageCompressionGuy.compressByTemplate(compressionTemplate);
             compressedImageBox.Image = compressionDetails.CompressedImage;
 
             saveToFile(compressionDetails.CompressedImage);

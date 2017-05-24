@@ -1,7 +1,11 @@
 ﻿namespace image_compression
 {
-    public class ChannelsTransformer
-    {
+    public class ChannelsTransformingGuy
+    { 
+        private ChannelsTransformingGuy()
+        {
+        }
+
         public static YCbCrChannelsContainer rgbToYCbCr(RGBChannelsContainer rgbChannels)
         {
             YCbCrChannelsContainer container = new YCbCrChannelsContainer(rgbChannels.Height, rgbChannels.Width);

@@ -3,20 +3,11 @@ using System.Drawing;
 
 namespace image_compression
 {
-    public class CompressionTemplate
-    {
-        public Image SourceImage { get; set; }
-
-        public int YChannelQuality { get; set; }
-        public int CbChannelQuality { get; set; }
-        public int CrChannelQuality { get; set; }
-    }
-
-    public class CompressionTemplateBuilder
+    public class CompressionTemplateBuildingGuy
     {
         private CompressionTemplate compressionTemplate;
 
-        public CompressionTemplateBuilder(Image image)
+        private CompressionTemplateBuildingGuy(Image image)
         {
             if (image == null)
             {
@@ -27,7 +18,12 @@ namespace image_compression
             this.compressionTemplate.SourceImage = image;
         }
 
-        public CompressionTemplateBuilder withYQuality(int quality)
+        public static CompressionTemplateBuildingGuy forImage(Image image)
+        {
+            return new CompressionTemplateBuildingGuy(image);
+        }
+
+        public CompressionTemplateBuildingGuy withYQuality(int quality)
         {
             validateQuality(quality);
 
@@ -35,7 +31,7 @@ namespace image_compression
             return this;
         }
 
-        public CompressionTemplateBuilder withCbQuality(int quality)
+        public CompressionTemplateBuildingGuy withCbQuality(int quality)
         {
             validateQuality(quality);
 
@@ -43,7 +39,7 @@ namespace image_compression
             return this;
         }
 
-        public CompressionTemplateBuilder withCrQuality(int quality)
+        public CompressionTemplateBuildingGuy withCrQuality(int quality)
         {
             validateQuality(quality);
 
@@ -51,7 +47,7 @@ namespace image_compression
             return this;
         }
 
-        public CompressionTemplateBuilder withSourceImage(Image image)
+        public CompressionTemplateBuildingGuy withSourceImage(Image image)
         {
             if (image == null)
             {

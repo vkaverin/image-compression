@@ -1,6 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
-using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -145,15 +145,30 @@ namespace image_compression
         {
             inProgressUIView();
 
-            int redQuality = (int) redChannelQualityUpDown.Value;
-            int greenQuality = (int) greenChannelQualityUpDown.Value;
-            int blueQuality = (int) blueChannelQualityUpDown.Value;
+            int redQuality = (int)redChannelQualityUpDown.Value;
+            int greenQuality = (int)greenChannelQualityUpDown.Value;
+            int blueQuality = (int)blueChannelQualityUpDown.Value;
             CompressionTemplate compressionTemplate = CompressionTemplateBuildingGuy.forImage(originalImageBox.Image)
                 .withYQuality(redQuality)
                 .withCbQuality(greenQuality)
                 .withCrQuality(blueQuality)
                 .make();
-            ImageCompressionDetails compressionDetails = ImageCompressionGuy.compressByTemplate(compressionTemplate);
+
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler(compressionWorker_doWork);
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(compressionWorker_completed);
+            worker.RunWorkerAsync(compressionTemplate);
+        }
+
+        private void compressionWorker_doWork(object sender, DoWorkEventArgs args)
+        {
+            CompressionTemplate compressionTemplate = (CompressionTemplate)args.Argument;
+            args.Result = ImageCompressionGuy.compressByTemplate(compressionTemplate);
+        }
+
+        private void compressionWorker_completed(object sender, RunWorkerCompletedEventArgs args)
+        {
+            ImageCompressionDetails compressionDetails = (ImageCompressionDetails)args.Result;
             compressedImageBox.Image = compressionDetails.CompressedImage;
 
             saveToFile(compressionDetails.CompressedImage);

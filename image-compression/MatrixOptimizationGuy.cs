@@ -13,7 +13,7 @@ namespace image_compression
 
         }
 
-        public static MatrixCompressionDetails optimize(double[][] matrix, int quality)
+        public static MatrixCompressionDetails optimize(float[][] matrix, int quality)
         {
             MatrixCompressionDetails details = new MatrixCompressionDetails();
             
@@ -22,11 +22,11 @@ namespace image_compression
             int nonzeroOriginalNumber = 0;
             int thrown = 0;
 
-            double[][] optimized = new double[matrix.Length][];
+            float[][] optimized = new float[matrix.Length][];
 
             for (int i = 0; i < matrix.Length; ++i)
             {
-                optimized[i] = new double[matrix[i].Length];
+                optimized[i] = new float[matrix[i].Length];
                 Array.Copy(matrix[i], optimized[i], matrix[i].Length);
             }
 
@@ -66,9 +66,9 @@ namespace image_compression
         struct MatrixElement : IComparable<MatrixElement>
         {
             Tuple<Int32, Int32> position;
-            double value;
+            float value;
 
-            public MatrixElement(int i, int j, double value)
+            public MatrixElement(int i, int j, float value)
             {
                 this.position = new Tuple<int, int>(i, j);
                 this.value = value;

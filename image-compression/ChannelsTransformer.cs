@@ -18,9 +18,9 @@
                     int g = rgbChannels.getGreen(i, j);
                     int b = rgbChannels.getBlue(i, j);
 
-                    double y = 0.299 * r + 0.587 * g + 0.114 * b;
-                    double cb = 128 - 0.168736 * r - 0.33264 * g + 0.5 * b;
-                    double cr = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
+                    float y = (float) (0.299 * r + 0.587 * g + 0.114 * b);
+                    float cb = (float)(128 - 0.168736 * r - 0.33264 * g + 0.5 * b);
+                    float cr = (float)(128 + 0.5 * r - 0.418688 * g - 0.081312 * b);
 
                     container.setY(i, j, y);
                     container.setCb(i, j, cb);
@@ -39,9 +39,9 @@
             {
                 for (int j = 0; j < yCbCrChannels.Width; ++j)
                 {
-                    double y = yCbCrChannels.getY(i, j);
-                    double cb = yCbCrChannels.getCb(i, j);
-                    double cr = yCbCrChannels.getCr(i, j);
+                    float y = yCbCrChannels.getY(i, j);
+                    float cb = yCbCrChannels.getCb(i, j);
+                    float cr = yCbCrChannels.getCr(i, j);
 
                     int r = (int)(y + 1.402 * (cr - 128));
                     int g = (int)(y - 0.344136 * (cb - 128) - 0.714136 * (cr - 128));

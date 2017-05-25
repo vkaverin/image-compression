@@ -7,14 +7,14 @@ namespace image_compression
         public int Width { get; set; }
         public int Height { get; set; }
 
-        protected double[][][] channels;
+        protected float[][][] channels;
 
         public AbstractChannelsContainer(int numberOfChannels, int height, int width)
         {
             this.Width = width;
             this.Height = height;
 
-            this.channels = new double[numberOfChannels][][];
+            this.channels = new float[numberOfChannels][][];
 
             for (int i = 0; i < channels.Length; ++i)
             {
@@ -33,21 +33,21 @@ namespace image_compression
             matrix = tmp;
         }
 
-        protected void setValueOfChannel(int numberOfChannel, int n, int m, double value)
+        protected void setValueOfChannel(int numberOfChannel, int n, int m, float value)
         {
             validateChannelNumber(numberOfChannel);
 
             this.channels[numberOfChannel][n][m] = value;
         }
 
-        protected double getValueOfChannel(int numberOfChannel, int n, int m)
+        protected float getValueOfChannel(int numberOfChannel, int n, int m)
         {
             validateChannelNumber(numberOfChannel);
 
             return this.channels[numberOfChannel][n][m];
         }
 
-        protected void fillChannel(int numberOfChannel, double[][] values)
+        protected void fillChannel(int numberOfChannel, float[][] values)
         {
             validateChannelNumber(numberOfChannel);
 
@@ -70,7 +70,7 @@ namespace image_compression
             }
         }
 
-        protected double[][] getChannelAsMatrix(int numberOfChannel)
+        protected float[][] getChannelAsMatrix(int numberOfChannel)
         {
             validateChannelNumber(numberOfChannel);
 

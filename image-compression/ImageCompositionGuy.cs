@@ -25,7 +25,8 @@ namespace image_compression
                 }
             }
 
-            return ChannelsTransformingGuy.rgbToYCbCr(rgbChannels);
+            YCbCrChannelsContainer channels = ChannelsTransformingGuy.rgbToYCbCr(rgbChannels);
+            return channels;
         }
 
         public static Image compose(RGBChannelsContainer channels)
@@ -43,12 +44,12 @@ namespace image_compression
             return output;
         }
 
-        private static Color asColor(double red, double green, double blue)
+        private static Color asColor(float red, float green, float blue)
         {
             return Color.FromArgb(toRGBRange(red), toRGBRange(green), toRGBRange(blue));
         }
 
-        private static int toRGBRange(double value)
+        private static int toRGBRange(float value)
         {
             int val = (int)value;
             return Math.Max(Math.Min(val, 255), 0);

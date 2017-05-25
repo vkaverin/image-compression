@@ -46,17 +46,17 @@ namespace image_compression
             private YCbCrChannelsContainer compressChannels(YCbCrChannelsContainer source)
             {
                 // Y
-                double[][] yMatrix = HaarCompressingGuy.compressMatrix(source.YChannel(), this.compressionTemplate.YChannelQuality);
+                float[][] yMatrix = HaarCompressingGuy.compressMatrix(source.YChannel(), this.compressionTemplate.YChannelQuality);
                 MatrixCompressionDetails optimizedYDetails =  MatrixOptimizationGuy.optimize(yMatrix, this.compressionTemplate.YChannelQuality);
                 compressionDetails.YChannelNonzeroElementsNumberOriginal = compressionDetails.YChannelNonzeroElementsNumberOriginal + optimizedYDetails.nonzeroElementsNumberOriginal;
                 compressionDetails.YChannelNonzeroElementsNumberCompressed = compressionDetails.YChannelNonzeroElementsNumberCompressed + optimizedYDetails.nonzeroElementsNumberCompressed;
                 // Cb
-                double[][] cbMatrix = HaarCompressingGuy.compressMatrix(source.CbChannel(), this.compressionTemplate.CbChannelQuality);
+                float[][] cbMatrix = HaarCompressingGuy.compressMatrix(source.CbChannel(), this.compressionTemplate.CbChannelQuality);
                 MatrixCompressionDetails optimizedCbDetails = MatrixOptimizationGuy.optimize(cbMatrix, this.compressionTemplate.CbChannelQuality);
                 compressionDetails.CbChannelNonzeroElementsNumberOriginal = compressionDetails.CbChannelNonzeroElementsNumberOriginal + optimizedCbDetails.nonzeroElementsNumberOriginal;
                 compressionDetails.CbChannelNonzeroElementsNumberCompressed = compressionDetails.CbChannelNonzeroElementsNumberCompressed + optimizedCbDetails.nonzeroElementsNumberCompressed;
                 // Cr
-                double[][] crMatrix = HaarCompressingGuy.compressMatrix(source.CrChannel(), this.compressionTemplate.CrChannelQuality);
+                float[][] crMatrix = HaarCompressingGuy.compressMatrix(source.CrChannel(), this.compressionTemplate.CrChannelQuality);
                 MatrixCompressionDetails optimizedCrDetails = MatrixOptimizationGuy.optimize(crMatrix, this.compressionTemplate.CrChannelQuality);
                 compressionDetails.CrChannelNonzeroElementsNumberOriginal = compressionDetails.CrChannelNonzeroElementsNumberOriginal + optimizedCrDetails.nonzeroElementsNumberOriginal;
                 compressionDetails.CrChannelNonzeroElementsNumberCompressed = compressionDetails.CrChannelNonzeroElementsNumberCompressed + optimizedCrDetails.nonzeroElementsNumberCompressed;
@@ -82,7 +82,7 @@ namespace image_compression
 
             private void estimateErrors(YCbCrChannelsContainer original, YCbCrChannelsContainer restored)
             {
-                double mse = ErrorsEstimatingGuy.mse(original.YChannel(), restored.YChannel());
+                float mse = ErrorsEstimatingGuy.mse(original.YChannel(), restored.YChannel());
                 this.compressionDetails.YChannelMSE = mse;
                 this.compressionDetails.YChannelPSNR = ErrorsEstimatingGuy.psnr(mse);
 

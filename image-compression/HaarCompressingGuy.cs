@@ -14,22 +14,22 @@ namespace image_compression
 
         }
 
-        public static double[][] compressMatrix(double[][] matrix, int quality)
+        public static float[][] compressMatrix(float[][] matrix, int quality)
         {
             int croppedHeight = (matrix.Length / HaarCompressingGuy.boxSize) * HaarCompressingGuy.boxSize;
-            double[][] compressedMatrix = new double[croppedHeight][];
+            float[][] compressedMatrix = new float[croppedHeight][];
             for (int i = 0; i < compressedMatrix.Length; ++i)
             {
                 int croppedWidth = (matrix[i].Length / HaarCompressingGuy.boxSize) * HaarCompressingGuy.boxSize;
-                compressedMatrix[i] = new double[croppedWidth];
+                compressedMatrix[i] = new float[croppedWidth];
             }
                         
             for (int i = 0; i + HaarCompressingGuy.boxSize <= compressedMatrix.Length; i += HaarCompressingGuy.boxSize)
             {
                 for (int j = 0; j + HaarCompressingGuy.boxSize <= compressedMatrix[i].Length; j += HaarCompressingGuy.boxSize)
                 {
-                    double[][] box = getBox(matrix, i, j);
-                    double[][] compressedBox = haarCompression(box);
+                    float[][] box = getBox(matrix, i, j);
+                    float[][] compressedBox = haarCompression(box);
                     putBox(compressedMatrix, compressedBox, i, j);
                 }
             }
@@ -37,12 +37,12 @@ namespace image_compression
             return compressedMatrix;
         }
 
-        private static double[][] getBox(double[][] matrix, int startTopIndex, int startLeftIndex)
+        private static float[][] getBox(float[][] matrix, int startTopIndex, int startLeftIndex)
         {
-            double[][] box = new double[HaarCompressingGuy.boxSize][];
+            float[][] box = new float[HaarCompressingGuy.boxSize][];
             for (int i = 0; i < box.Length; ++i)
             {
-                box[i] = new double[HaarCompressingGuy.boxSize];
+                box[i] = new float[HaarCompressingGuy.boxSize];
             }
 
             for (int i = 0; i < box.Length; ++i)
@@ -56,7 +56,7 @@ namespace image_compression
             return box;
         }
 
-        private static void putBox(double[][] matrix, double[][] box, int startTopIndex, int startLeftIndex)
+        private static void putBox(float[][] matrix, float[][] box, int startTopIndex, int startLeftIndex)
         {
             for (int i = 0; i < box.Length; ++i)
             {
@@ -67,19 +67,19 @@ namespace image_compression
             }
         }
 
-        private static double[][] haarCompression(double[][] source)
+        private static float[][] haarCompression(float[][] source)
         {
-            double[][] matrix = new double[source.Length][];
+            float[][] matrix = new float[source.Length][];
             for (int i = 0; i < source.Length; ++i)
             {
-                matrix[i] = new double[source[i].Length];
+                matrix[i] = new float[source[i].Length];
                 source[i].CopyTo(matrix[i], 0);
             }
 
             for (int i = 0; i < HaarCompressingGuy.boxSize; ++i)
             {
                 int columns = HaarCompressingGuy.boxSize;
-                double[] temp = new double[HaarCompressingGuy.boxSize];
+                float[] temp = new float[HaarCompressingGuy.boxSize];
 
                 while (columns > 0)
                 {
@@ -106,7 +106,7 @@ namespace image_compression
             for (int i = 0; i < HaarCompressingGuy.boxSize; ++i)
             {
                 int rows = HaarCompressingGuy.boxSize;
-                double[] temp = new double[HaarCompressingGuy.boxSize];
+                float[] temp = new float[HaarCompressingGuy.boxSize];
                 while (rows > 0)
                 {
                     for (int j = 0; j < rows / 2; ++j)
@@ -132,20 +132,20 @@ namespace image_compression
             return matrix;
         }
 
-        public static double[][] restoreMatrix(double[][] matrix)
+        public static float[][] restoreMatrix(float[][] matrix)
         {
-            double[][] restoredMatrix = new double[matrix.Length][];
+            float[][] restoredMatrix = new float[matrix.Length][];
             for (int i = 0; i < restoredMatrix.Length; ++i)
             {
-                restoredMatrix[i] = new double[matrix[i].Length];
+                restoredMatrix[i] = new float[matrix[i].Length];
             }
 
             for (int i = 0; i + HaarCompressingGuy.boxSize <= restoredMatrix.Length; i += HaarCompressingGuy.boxSize)
             {
                 for (int j = 0; j + HaarCompressingGuy.boxSize <= restoredMatrix[i].Length; j += HaarCompressingGuy.boxSize)
                 {
-                    double[][] box = getBox(matrix, i, j);
-                    double[][] compressedBox = restoreHaar(box);
+                    float[][] box = getBox(matrix, i, j);
+                    float[][] compressedBox = restoreHaar(box);
                     putBox(restoredMatrix, compressedBox, i, j);
                 }
             }
@@ -153,19 +153,19 @@ namespace image_compression
             return restoredMatrix;
         }
 
-        private static double[][] restoreHaar(double[][] source)
+        private static float[][] restoreHaar(float[][] source)
         {
-            double[][] matrix = new double[source.Length][];
+            float[][] matrix = new float[source.Length][];
             for (int i = 0; i < source.Length; ++i)
             {
-                matrix[i] = new double[source[i].Length];
+                matrix[i] = new float[source[i].Length];
                 source[i].CopyTo(matrix[i], 0);
             }
 
             for (int i = 0; i < HaarCompressingGuy.boxSize; ++i)
             {
                 int columns = 1;
-                double[] temp = new double[HaarCompressingGuy.boxSize];
+                float[] temp = new float[HaarCompressingGuy.boxSize];
                 while (columns * 2 <= HaarCompressingGuy.boxSize)
                 {
                     for (int j = 0; j < HaarCompressingGuy.boxSize; ++j)
@@ -186,7 +186,7 @@ namespace image_compression
             for (int i = 0; i < HaarCompressingGuy.boxSize; ++i)
             {
                 int rows = 1;
-                double[] temp = new double[HaarCompressingGuy.boxSize];
+                float[] temp = new float[HaarCompressingGuy.boxSize];
                 while (rows * 2 <= HaarCompressingGuy.boxSize)
                 {
                     for (int j = 0; j < HaarCompressingGuy.boxSize; ++j)

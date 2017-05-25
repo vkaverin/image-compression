@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace image_compression
 {
@@ -13,14 +9,14 @@ namespace image_compression
 
         }
 
-        public static double mse(double[][] original, double[][] restored)
+        public static float mse(float[][] original, float[][] restored)
         {
-            double sum = 0;
+            float sum = 0;
             for (int i = 0; i < restored.Length; ++i)
             {
                 for (int j = 0; j < restored[i].Length; ++j)
                 {
-                    double diff = restored[i][j] - original[i][j];
+                    float diff = restored[i][j] - original[i][j];
                     sum += diff * diff;
                 }
             }
@@ -28,9 +24,9 @@ namespace image_compression
             return sum / restored.Length / restored[0].Length;
         }
 
-        public static double psnr(double mse)
+        public static float psnr(float mse)
         {
-            return 10 * Math.Log(255 * 255 / mse);
+            return (float)(10 * Math.Log(255 * 255 / mse));
         }
     }
 }

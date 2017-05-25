@@ -11,26 +11,26 @@ public class ImageCompressionDetails
     public int CbChannelNonzeroElementsNumberCompressed { get; set; }
     public int CrChannelNonzeroElementsNumberOriginal { get; set; }
     public int CrChannelNonzeroElementsNumberCompressed { get; set; }
-    public double YChannelMSE { get; set; }
-    public double YChannelPSNR { get; set; }
-    public double CbChannelMSE { get; set; }
-    public double CbChannelPSNR { get; set; }
-    public double CrChannelMSE { get; set; }
-    public double CrChannelPSNR { get; set; }
+    public float YChannelMSE { get; set; }
+    public float YChannelPSNR { get; set; }
+    public float CbChannelMSE { get; set; }
+    public float CbChannelPSNR { get; set; }
+    public float CrChannelMSE { get; set; }
+    public float CrChannelPSNR { get; set; }
     public long CompressionTime { get; set; }
 
-    public double YChannelCompressionRatio()
+    public float YChannelCompressionRatio()
     {
-        return ((double) YChannelNonzeroElementsNumberOriginal) / this.YChannelNonzeroElementsNumberCompressed;
+        return ((float) YChannelNonzeroElementsNumberOriginal) / this.YChannelNonzeroElementsNumberCompressed;
     }
 
-    public double CbChannelCompressionRatio()
+    public float CbChannelCompressionRatio()
     {
-        return ((double)CbChannelNonzeroElementsNumberOriginal) / this.CbChannelNonzeroElementsNumberCompressed;
+        return ((float)CbChannelNonzeroElementsNumberOriginal) / this.CbChannelNonzeroElementsNumberCompressed;
     }
 
-    public double CrChannelCompressionRatio()
+    public float CrChannelCompressionRatio()
     {
-        return ((double)CrChannelNonzeroElementsNumberOriginal) / this.CrChannelNonzeroElementsNumberCompressed;
+        return ((float)CrChannelNonzeroElementsNumberOriginal) / this.CrChannelNonzeroElementsNumberCompressed;
     }
 }

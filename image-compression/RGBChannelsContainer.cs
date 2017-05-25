@@ -40,32 +40,32 @@
             return (int)getValueOfChannel(BLUE, n, m);
         }
 
-        public void setRed(double[][] values)
+        public void setRed(float[][] values)
         {
             fillChannel(RED, values);
         }
 
-        public void setGreen(double[][] values)
+        public void setGreen(float[][] values)
         {
             fillChannel(GREEN, values);
         }
 
-        public void setBlue(double[][] values)
+        public void setBlue(float[][] values)
         {
             fillChannel(BLUE, values);
         }
 
-        public double[][] RedChannel()
+        public float[][] RedChannel()
         {
             return getChannelAsMatrix(RED);
         }
 
-        public double[][] GreenChannel()
+        public float[][] GreenChannel()
         {
             return getChannelAsMatrix(GREEN);
         }
 
-        public double[][] BlueChannel()
+        public float[][] BlueChannel()
         {
             return getChannelAsMatrix(BLUE);
         }

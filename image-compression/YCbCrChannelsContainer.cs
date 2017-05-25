@@ -10,62 +10,62 @@
         {
         }
 
-        public void setY(int n, int m, double value)
+        public void setY(int n, int m, float value)
         {
             setValueOfChannel(Y, n, m, value);
         }
 
-        public void setCb(int n, int m, double value)
+        public void setCb(int n, int m, float value)
         {
             setValueOfChannel(CB, n, m, value);
         }
 
-        public void setCr(int n, int m, double value)
+        public void setCr(int n, int m, float value)
         {
             setValueOfChannel(CR, n, m, value);
         }
 
-        public double getY(int n, int m)
+        public float getY(int n, int m)
         {
             return (int)getValueOfChannel(Y, n, m);
         }
 
-        public double getCb(int n, int m)
+        public float getCb(int n, int m)
         {
             return (int)getValueOfChannel(CB, n, m);
         }
 
-        public double getCr(int n, int m)
+        public float getCr(int n, int m)
         {
             return (int)getValueOfChannel(CR, n, m);
         }
 
-        public void setY(double[][] values)
+        public void setY(float[][] values)
         {
             fillChannel(Y, values);
         }
 
-        public void setCb(double[][] values)
+        public void setCb(float[][] values)
         {
             fillChannel(CB, values);
         }
 
-        public void setCr(double[][] values)
+        public void setCr(float[][] values)
         {
             fillChannel(CR, values);
         }
 
-        public double[][] YChannel()
+        public float[][] YChannel()
         {
             return getChannelAsMatrix(Y);
         }
 
-        public double[][] CbChannel()
+        public float[][] CbChannel()
         {
             return getChannelAsMatrix(CB);
         }
 
-        public double[][] CrChannel()
+        public float[][] CrChannel()
         {
             return getChannelAsMatrix(CR);
         }

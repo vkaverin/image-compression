@@ -8,7 +8,7 @@ namespace image_compression
 {
     public class MatrixCompressionDetails
     {
-        public double[][] CompressedMatrix { get; set; }
+        public float[][] CompressedMatrix { get; set; }
         public int nonzeroElementsNumberOriginal { get; set; }
         public int nonzeroElementsNumberCompressed { get; set; }
     }

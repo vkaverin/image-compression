@@ -13,11 +13,11 @@ namespace image_compression
         public static YCbCrChannelsContainer decompose(Image image) {
             Bitmap sourceBitmap = new Bitmap(image);
 
-            RGBChannelsContainer rgbChannels = new RGBChannelsContainer(image.Height, image.Width);
+            RGBChannelsContainer rgbChannels = new RGBChannelsContainer(sourceBitmap.Height, sourceBitmap.Width);
 
-            for (int i = 0; i < image.Height; ++i)
+            for (int i = 0; i < sourceBitmap.Height; ++i)
             {
-                for (int j = 0; j < image.Width; ++j)
+                for (int j = 0; j < sourceBitmap.Width; ++j)
                 {
                     rgbChannels.setRed(i, j, sourceBitmap.GetPixel(j, i).R);
                     rgbChannels.setGreen(i, j, sourceBitmap.GetPixel(j, i).G);

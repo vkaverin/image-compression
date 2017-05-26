@@ -67,16 +67,7 @@ namespace image_compression
             statisticsLabel.Hide();
         }
 
-        private static void saveToFile(Image image)
-        {
-            String storageDirectory = Application.StartupPath + System.IO.Path.DirectorySeparatorChar + "compressed";
-            if (!Directory.Exists(storageDirectory))
-            {
-                Directory.CreateDirectory(storageDirectory);
-            }
-            string filename = storageDirectory + System.IO.Path.DirectorySeparatorChar + "image-" + DateTime.Now.ToFileTime() + ".jpg";
-            image.Save(filename);
-        }
+        
 
         private void inProgressUIView()
         {
@@ -170,9 +161,28 @@ namespace image_compression
         {
             ImageCompressionDetails compressionDetails = (ImageCompressionDetails)args.Result;
             compressedImageBox.Image = compressionDetails.CompressedImage;
-
-            saveToFile(compressionDetails.CompressedImage);
             compressionCompletedUIView(compressionDetails);
+        }
+
+        private void saveImageButton_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.Filter = "JPEG files (*.jpg)|*.jpg|PNG files (*.png)|*.png|All files (*.*)|*.*";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                save(compressedImageBox.Image, saveFileDialog1.FileName);
+            }
+        }
+
+        private void save(Image image, string name)
+        {
+            string storageDirectory = Application.StartupPath + System.IO.Path.DirectorySeparatorChar + "output";
+            if (!Directory.Exists(storageDirectory))
+            {
+                Directory.CreateDirectory(storageDirectory);
+            }
+
+            string path = name;
+            image.Save(path);
         }
     }
 }

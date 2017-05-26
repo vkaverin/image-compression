@@ -47,6 +47,8 @@
             this.crChannelLabel = new System.Windows.Forms.Label();
             this.statisticsGroupBox = new System.Windows.Forms.GroupBox();
             this.statisticsLabel = new System.Windows.Forms.Label();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.saveImageButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.originalImageBox)).BeginInit();
             this.originalImageFlowLayoutPanel.SuspendLayout();
             this.compressedImageFlowLayoutPanel.SuspendLayout();
@@ -227,6 +229,7 @@
             // 
             // statisticsGroupBox
             // 
+            this.statisticsGroupBox.Controls.Add(this.saveImageButton);
             this.statisticsGroupBox.Controls.Add(this.statisticsLabel);
             this.statisticsGroupBox.Location = new System.Drawing.Point(1279, 15);
             this.statisticsGroupBox.Name = "statisticsGroupBox";
@@ -243,6 +246,16 @@
             this.statisticsLabel.Size = new System.Drawing.Size(61, 13);
             this.statisticsLabel.TabIndex = 0;
             this.statisticsLabel.Text = "#statistics#";
+            // 
+            // saveImageButton
+            // 
+            this.saveImageButton.Location = new System.Drawing.Point(14, 455);
+            this.saveImageButton.Name = "saveImageButton";
+            this.saveImageButton.Size = new System.Drawing.Size(469, 76);
+            this.saveImageButton.TabIndex = 1;
+            this.saveImageButton.Text = "Save compressed image";
+            this.saveImageButton.UseVisualStyleBackColor = true;
+            this.saveImageButton.Click += new System.EventHandler(this.saveImageButton_Click);
             // 
             // ImageCompressionForm
             // 
@@ -300,6 +313,8 @@
         private System.Windows.Forms.Label crChannelLabel;
         private System.Windows.Forms.GroupBox statisticsGroupBox;
         private System.Windows.Forms.Label statisticsLabel;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button saveImageButton;
     }
 }
 

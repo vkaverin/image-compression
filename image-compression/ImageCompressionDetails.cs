@@ -2,7 +2,6 @@
 
 public class ImageCompressionDetails
 {
-    public int Quality { get; set; }
     public Image SourceImage { get; set; }
     public Image CompressedImage { get; set; }
     public int YChannelNonzeroElementsNumberOriginal { get; set; }
@@ -18,6 +17,7 @@ public class ImageCompressionDetails
     public float CrChannelMSE { get; set; }
     public float CrChannelPSNR { get; set; }
     public long CompressionTime { get; set; }
+    public bool ErrorsEstimated { get; set; }
 
     public float YChannelCompressionRatio()
     {

@@ -37,6 +37,7 @@ namespace image_compression
             greenChannelQualityUpDown.Hide();
             blueChannelQualityUpDown.Hide();
             goWorkButton.Hide();
+            estimateErrorsCheckBox.Hide();
         }
 
         private void openNewImage_button(object sender, EventArgs e)
@@ -65,6 +66,8 @@ namespace image_compression
             qualityLabel.Show();
             statisticsGroupBox.Hide();
             statisticsLabel.Hide();
+            estimateErrorsCheckBox.Show();
+            estimateErrorsCheckBox.Enabled = true;
         }
 
         
@@ -76,6 +79,7 @@ namespace image_compression
             blueChannelQualityUpDown.Enabled = false;
             goWorkButton.Enabled = false;
             chooseImageButton.Enabled = false;
+            estimateErrorsCheckBox.Enabled = false;
 
             compressedImageBox.Hide();
             compressionInProgressLabel.Show();
@@ -94,31 +98,42 @@ namespace image_compression
             blueChannelQualityUpDown.Enabled = true;
             goWorkButton.Enabled = true;
             chooseImageButton.Enabled = true;
+            estimateErrorsCheckBox.Enabled = true;
             this.Update();
         }
 
         private void fillStatistics(ImageCompressionDetails compressionDetails)
         {
             StringBuilder statistics = new StringBuilder();
+            bool errorsEstimated = compressionDetails.ErrorsEstimated;
             statistics.AppendFormat("Compression took {0} second(s)\n", compressionDetails.CompressionTime / 1000.0);
             statistics.AppendFormat("\nY channel:\n");
             statistics.AppendFormat("  Number of nonzero elements in original image: {0}\n", compressionDetails.YChannelNonzeroElementsNumberOriginal);
             statistics.AppendFormat("  Number of nonzero elements in compressed image: {0}\n", compressionDetails.YChannelNonzeroElementsNumberCompressed);
             statistics.AppendFormat("  Compression ratio: {0:F3}\n", compressionDetails.YChannelCompressionRatio());
-            statistics.AppendFormat("  MSE: {0:F3}\n", compressionDetails.YChannelMSE);
-            statistics.AppendFormat("  PSRN: {0:F3}\n", compressionDetails.YChannelPSNR);
+            if (errorsEstimated)
+            {
+                statistics.AppendFormat("  MSE: {0:F3}\n", compressionDetails.YChannelMSE);
+                statistics.AppendFormat("  PSRN: {0:F3}\n", compressionDetails.YChannelPSNR);
+            }
             statistics.AppendFormat("\nCb channel:\n");
             statistics.AppendFormat("  Number of nonzero elements in original image: {0}\n", compressionDetails.CbChannelNonzeroElementsNumberOriginal);
             statistics.AppendFormat("  Number of nonzero elements in compressed image: {0}\n", compressionDetails.CbChannelNonzeroElementsNumberCompressed);
             statistics.AppendFormat("  Compression ratio: {0:F3}\n", compressionDetails.CbChannelCompressionRatio());
-            statistics.AppendFormat("  MSE: {0:F3}\n", compressionDetails.CbChannelMSE);
-            statistics.AppendFormat("  PSRN: {0:F3}\n", compressionDetails.CbChannelPSNR);
+            if (errorsEstimated)
+            {
+                statistics.AppendFormat("  MSE: {0:F3}\n", compressionDetails.CbChannelMSE);
+                statistics.AppendFormat("  PSRN: {0:F3}\n", compressionDetails.CbChannelPSNR);
+            }
             statistics.AppendFormat("\nCr channel:\n");
             statistics.AppendFormat("  Number of nonzero elements in original image: {0}\n", compressionDetails.CrChannelNonzeroElementsNumberOriginal);
             statistics.AppendFormat("  Number of nonzero elements in compressed image: {0}\n", compressionDetails.CrChannelNonzeroElementsNumberCompressed);
             statistics.AppendFormat("  Compression ratio: {0:F3}\n", compressionDetails.CrChannelCompressionRatio());
-            statistics.AppendFormat("  MSE: {0:F3}\n", compressionDetails.CrChannelMSE);
-            statistics.AppendFormat("  PSRN: {0:F3}\n", compressionDetails.CrChannelPSNR);
+            if (errorsEstimated)
+            {
+                statistics.AppendFormat("  MSE: {0:F3}\n", compressionDetails.CrChannelMSE);
+                statistics.AppendFormat("  PSRN: {0:F3}\n", compressionDetails.CrChannelPSNR);
+            }
             statisticsLabel.Text = statistics.ToString();
             statisticsGroupBox.Show();
             statisticsLabel.Show();
@@ -143,6 +158,7 @@ namespace image_compression
                 .withYQuality(redQuality)
                 .withCbQuality(greenQuality)
                 .withCrQuality(blueQuality)
+                .withErrorsEstimation(estimateErrorsCheckBox.Checked)
                 .make();
 
             BackgroundWorker worker = new BackgroundWorker();
@@ -154,7 +170,7 @@ namespace image_compression
         private void compressionWorker_doWork(object sender, DoWorkEventArgs args)
         {
             CompressionTemplate compressionTemplate = (CompressionTemplate)args.Argument;
-            args.Result = ImageCompressionGuy.compressByTemplate(compressionTemplate);
+            args.Result = ImageCompressionService.compressByTemplate(compressionTemplate);
         }
 
         private void compressionWorker_completed(object sender, RunWorkerCompletedEventArgs args)

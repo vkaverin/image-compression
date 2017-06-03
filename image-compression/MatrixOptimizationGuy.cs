@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace image_compression
 {
@@ -13,22 +10,12 @@ namespace image_compression
 
         }
 
-        public static MatrixCompressionDetails optimize(float[][] matrix, int quality)
+        public static Tuple<int, int> optimize(float[][] matrix, int quality)
         {
-            MatrixCompressionDetails details = new MatrixCompressionDetails();
-            
             List<MatrixElement> elements = new List<MatrixElement>();
 
-            int nonzeroOriginalNumber = 0;
+            int nonzeroBefore = 0;
             int thrown = 0;
-
-            float[][] optimized = new float[matrix.Length][];
-
-            for (int i = 0; i < matrix.Length; ++i)
-            {
-                optimized[i] = new float[matrix[i].Length];
-                Array.Copy(matrix[i], optimized[i], matrix[i].Length);
-            }
 
             for (int i = 0; i < matrix.Length; ++i)
             {
@@ -36,7 +23,7 @@ namespace image_compression
                 {
                     if (Math.Abs(matrix[i][j]) > 0)
                     {
-                        ++nonzeroOriginalNumber;
+                        ++nonzeroBefore;
                         elements.Add(new MatrixElement(i, j, matrix[i][j]));
                     }
                 }
@@ -44,23 +31,28 @@ namespace image_compression
 
             elements.Sort();
 
-            int percentToThrowAway = (100 - quality);
-            int limit = (int)((elements.Count / 100.0) * (percentToThrowAway));
-            int throwLimit = percentToThrowAway < 100 ? (int)((elements.Count / 100.0) * (percentToThrowAway)) : elements.Count;
+            int optimizationPercent = (100 - quality);
 
-            while (thrown < throwLimit && thrown < elements.Count)
+            if (optimizationPercent == 100)
+            {
+                for (int i = 0; i < matrix.Length; ++i)
+                {
+                    Array.Clear(matrix[i], 0, matrix[i].Length);
+                }
+            }
+
+            int limit = (optimizationPercent == 100)
+                ? elements.Count
+                : (int)((elements.Count / 100.0) * (optimizationPercent));
+
+            while (thrown < limit)
             {
                 Tuple<int, int> pos = elements[thrown].getPosition();
-                optimized[pos.Item1][pos.Item2] = 0;
+                matrix[pos.Item1][pos.Item2] = 0;
                 ++thrown;
             }
 
-
-            details.CompressedMatrix = optimized;
-            details.nonzeroElementsNumberOriginal = nonzeroOriginalNumber;
-            details.nonzeroElementsNumberCompressed = nonzeroOriginalNumber - thrown;
-
-            return details;
+            return new Tuple<int, int>(nonzeroBefore, nonzeroBefore - limit);
         }
 
         struct MatrixElement : IComparable<MatrixElement>

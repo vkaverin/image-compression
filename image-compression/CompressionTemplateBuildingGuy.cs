@@ -58,6 +58,12 @@ namespace image_compression
             return this;
         }
 
+        public CompressionTemplateBuildingGuy withErrorsEstimation(bool val)
+        {
+            this.compressionTemplate.estimateErrors = val;
+            return this;
+        }
+
         public CompressionTemplate make()
         {
             return this.compressionTemplate;

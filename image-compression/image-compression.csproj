@@ -47,21 +47,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractChannelsContainer.cs" />
+    <Compile Include="ChannelsCompressionService.cs" />
     <Compile Include="ChannelsTransformer.cs" />
+    <Compile Include="CompressionStatistics.cs" />
     <Compile Include="CompressionTemplate.cs" />
-    <Compile Include="ErrorsEstimatingGuy.cs" />
+    <Compile Include="ConcurrentImageCompressor.cs" />
+    <Compile Include="ErrorsEstimationService.cs" />
     <Compile Include="ImageCompressionDetails.cs" />
     <Compile Include="CompressionTemplateBuildingGuy.cs" />
-    <Compile Include="HaarCompressingGuy.cs" />
+    <Compile Include="HaarCompression.cs" />
     <Compile Include="ImageCompressionForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ImageCompressionForm.Designer.cs">
       <DependentUpon>ImageCompressionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImageCompressionGuy.cs" />
+    <Compile Include="ImageCompressionService.cs" />
     <Compile Include="ImageCompositionGuy.cs" />
-    <Compile Include="MatrixCompressionDetails.cs" />
     <Compile Include="MatrixOptimizationGuy.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

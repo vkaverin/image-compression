@@ -46,9 +46,10 @@
             this.greenChannelLabel = new System.Windows.Forms.Label();
             this.crChannelLabel = new System.Windows.Forms.Label();
             this.statisticsGroupBox = new System.Windows.Forms.GroupBox();
+            this.saveImageButton = new System.Windows.Forms.Button();
             this.statisticsLabel = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.saveImageButton = new System.Windows.Forms.Button();
+            this.estimateErrorsCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.originalImageBox)).BeginInit();
             this.originalImageFlowLayoutPanel.SuspendLayout();
             this.compressedImageFlowLayoutPanel.SuspendLayout();
@@ -238,15 +239,6 @@
             this.statisticsGroupBox.TabStop = false;
             this.statisticsGroupBox.Text = "Statistics";
             // 
-            // statisticsLabel
-            // 
-            this.statisticsLabel.AutoSize = true;
-            this.statisticsLabel.Location = new System.Drawing.Point(11, 16);
-            this.statisticsLabel.Name = "statisticsLabel";
-            this.statisticsLabel.Size = new System.Drawing.Size(61, 13);
-            this.statisticsLabel.TabIndex = 0;
-            this.statisticsLabel.Text = "#statistics#";
-            // 
             // saveImageButton
             // 
             this.saveImageButton.Location = new System.Drawing.Point(14, 455);
@@ -257,11 +249,31 @@
             this.saveImageButton.UseVisualStyleBackColor = true;
             this.saveImageButton.Click += new System.EventHandler(this.saveImageButton_Click);
             // 
+            // statisticsLabel
+            // 
+            this.statisticsLabel.AutoSize = true;
+            this.statisticsLabel.Location = new System.Drawing.Point(11, 16);
+            this.statisticsLabel.Name = "statisticsLabel";
+            this.statisticsLabel.Size = new System.Drawing.Size(61, 13);
+            this.statisticsLabel.TabIndex = 0;
+            this.statisticsLabel.Text = "#statistics#";
+            // 
+            // estimateErrorsCheckBox
+            // 
+            this.estimateErrorsCheckBox.AutoSize = true;
+            this.estimateErrorsCheckBox.Location = new System.Drawing.Point(601, 315);
+            this.estimateErrorsCheckBox.Name = "estimateErrorsCheckBox";
+            this.estimateErrorsCheckBox.Size = new System.Drawing.Size(85, 17);
+            this.estimateErrorsCheckBox.TabIndex = 21;
+            this.estimateErrorsCheckBox.Text = "MSE, PSNR";
+            this.estimateErrorsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // ImageCompressionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1792, 633);
+            this.Controls.Add(this.estimateErrorsCheckBox);
             this.Controls.Add(this.statisticsGroupBox);
             this.Controls.Add(this.crChannelLabel);
             this.Controls.Add(this.greenChannelLabel);
@@ -315,6 +327,7 @@
         private System.Windows.Forms.Label statisticsLabel;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button saveImageButton;
+        private System.Windows.Forms.CheckBox estimateErrorsCheckBox;
     }
 }
 

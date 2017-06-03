@@ -1,4 +1,6 @@
-﻿namespace image_compression
+﻿using System;
+
+namespace image_compression
 {
     public class ChannelsTransformingGuy
     { 
@@ -14,17 +16,12 @@
             {
                 for (int j = 0; j < rgbChannels.Width; ++j)
                 {
-                    int r = rgbChannels.getRed(i, j);
-                    int g = rgbChannels.getGreen(i, j);
-                    int b = rgbChannels.getBlue(i, j);
+                    byte[] rgb = new byte[3] { rgbChannels.getRed(i, j), rgbChannels.getGreen(i, j), rgbChannels.getBlue(i, j) };
+                    float[] yCbCr = rgbToYCbCr(rgb);
 
-                    float y = (float) (0.299 * r + 0.587 * g + 0.114 * b);
-                    float cb = (float)(128 - 0.168736 * r - 0.33264 * g + 0.5 * b);
-                    float cr = (float)(128 + 0.5 * r - 0.418688 * g - 0.081312 * b);
-
-                    container.setY(i, j, y);
-                    container.setCb(i, j, cb);
-                    container.setCr(i, j, cr);
+                    container.setY(i, j, yCbCr[0]);
+                    container.setCb(i, j, yCbCr[1]);
+                    container.setCr(i, j, yCbCr[2]);
                 }
             }
 
@@ -39,21 +36,49 @@
             {
                 for (int j = 0; j < yCbCrChannels.Width; ++j)
                 {
-                    float y = yCbCrChannels.getY(i, j);
-                    float cb = yCbCrChannels.getCb(i, j);
-                    float cr = yCbCrChannels.getCr(i, j);
+                    float[] yCbCr = new float[3] { yCbCrChannels.getY(i, j), yCbCrChannels.getCb(i, j), yCbCrChannels.getCr(i, j) };
+                    byte[] rgb = yCbCrToRGB(yCbCr);
 
-                    int r = (int)(y + 1.402 * (cr - 128));
-                    int g = (int)(y - 0.344136 * (cb - 128) - 0.714136 * (cr - 128));
-                    int b = (int)(y + 1.772 * (cb - 128));
-
-                    container.setRed(i, j, r);
-                    container.setGreen(i, j, g);
-                    container.setBlue(i, j, b);
+                    container.setRed(i, j, rgb[0]);
+                    container.setGreen(i, j, rgb[1]);
+                    container.setBlue(i, j, rgb[2]);
                 }
             }
 
             return container;
+        }
+
+        public static byte[] yCbCrToRGB(float[] values)
+        {
+            float y = values[0];
+            float cb = values[1];
+            float cr = values[2];
+
+            return new byte[3]
+            {
+                toRGBRange(y + 1.402 * (cr - 128)),
+                toRGBRange(y - 0.344136 * (cb - 128) - 0.714136 * (cr - 128)),
+                toRGBRange(y + 1.772 * (cb - 128))
+            };
+        }
+
+        public static float[] rgbToYCbCr(byte[] values)
+        {
+            byte r = values[0];
+            byte g = values[1];
+            byte b = values[2];
+
+            return new float[3]
+            {
+                (float) (0.299 * r + 0.587 * g + 0.114 * b),
+                (float) (128 - 0.168736 * r - 0.33264 * g + 0.5 * b),
+                (float) (128 + 0.5 * r - 0.418688 * g - 0.081312 * b)
+        };
+        }
+
+        private static byte toRGBRange(double value)
+        {
+            return (byte) Math.Max(Math.Min(value, 255), 0);
         }
     }
 

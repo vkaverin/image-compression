@@ -2,19 +2,19 @@
 
 namespace image_compression
 {
-    public abstract class AbstractChannelsContainer
+    public abstract class AbstractChannelsContainer<T>
     {
         public int Width { get; set; }
         public int Height { get; set; }
 
-        protected float[][][] channels;
+        protected T[][][] channels;
 
         public AbstractChannelsContainer(int numberOfChannels, int height, int width)
         {
             this.Width = width;
             this.Height = height;
 
-            this.channels = new float[numberOfChannels][][];
+            this.channels = new T[numberOfChannels][][];
 
             for (int i = 0; i < channels.Length; ++i)
             {
@@ -22,7 +22,7 @@ namespace image_compression
             }
         }
 
-        private void alloc<T>(out T[][] matrix)
+        private void alloc(out T[][] matrix)
         {
             T[][] tmp = new T[this.Height][];
             for (int i = 0; i < this.Height; ++i)
@@ -33,21 +33,21 @@ namespace image_compression
             matrix = tmp;
         }
 
-        protected void setValueOfChannel(int numberOfChannel, int n, int m, float value)
+        protected void setValueOfChannel(int numberOfChannel, int n, int m, T value)
         {
             validateChannelNumber(numberOfChannel);
 
             this.channels[numberOfChannel][n][m] = value;
         }
 
-        protected float getValueOfChannel(int numberOfChannel, int n, int m)
+        protected T getValueOfChannel(int numberOfChannel, int n, int m)
         {
             validateChannelNumber(numberOfChannel);
 
             return this.channels[numberOfChannel][n][m];
         }
 
-        protected void fillChannel(int numberOfChannel, float[][] values)
+        protected void fillChannel(int numberOfChannel, T[][] values)
         {
             validateChannelNumber(numberOfChannel);
 
@@ -70,7 +70,7 @@ namespace image_compression
             }
         }
 
-        protected float[][] getChannelAsMatrix(int numberOfChannel)
+        protected T[][] getChannelAsMatrix(int numberOfChannel)
         {
             validateChannelNumber(numberOfChannel);
 

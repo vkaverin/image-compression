@@ -10,49 +10,53 @@ namespace image_compression
 
         }
 
-        public static YCbCrChannelsContainer decompose(Image image) {
-            Bitmap sourceBitmap = new Bitmap(image);
+        public static YCbCrChannelsContainer decompose(Bitmap source, int x, int y, int size) {
+            YCbCrChannelsContainer channels = new YCbCrChannelsContainer(size, size);
 
-            RGBChannelsContainer rgbChannels = new RGBChannelsContainer(sourceBitmap.Height, sourceBitmap.Width);
-
-            for (int i = 0; i < sourceBitmap.Height; ++i)
+            for (int i = 0; i < size; ++i)
             {
-                for (int j = 0; j < sourceBitmap.Width; ++j)
+                for (int j = 0; j < size; ++j)
                 {
-                    rgbChannels.setRed(i, j, sourceBitmap.GetPixel(j, i).R);
-                    rgbChannels.setGreen(i, j, sourceBitmap.GetPixel(j, i).G);
-                    rgbChannels.setBlue(i, j, sourceBitmap.GetPixel(j, i).B);
+                    float[] yCbCr = extractYCbCr(source, x + j, y + i);
+                    channels.setY(i, j, yCbCr[0]);
+                    channels.setCb(i, j, yCbCr[1]);
+                    channels.setCr(i, j, yCbCr[2]);
                 }
             }
 
-            YCbCrChannelsContainer channels = ChannelsTransformingGuy.rgbToYCbCr(rgbChannels);
             return channels;
         }
 
-        public static Image compose(RGBChannelsContainer channels)
+        public static void compose(Bitmap output, RGBChannelsContainer channels, int x, int y)
         {
-            Bitmap output = new Bitmap(channels.Width, channels.Height);
             for (int i = 0; i < channels.Height; ++i)
             {
                 for (int j = 0; j < channels.Width; ++j)
                 {
-                    Color color = asColor(channels.getRed(i, j), channels.getGreen(i, j), channels.getBlue(i, j));
-                    output.SetPixel(j, i, color);
+                    byte[] rgb = new byte[] { channels.getRed(i, j), channels.getGreen(i, j), channels.getBlue(i, j) };
+                    Color color = asRgbColor(rgb);
+                    output.SetPixel(x + j, y + i, color);
                 }
             }
-
-            return output;
         }
 
-        private static Color asColor(float red, float green, float blue)
+        public static float[] extractYCbCr(Bitmap source, int x, int y)
         {
-            return Color.FromArgb(toRGBRange(red), toRGBRange(green), toRGBRange(blue));
+            return ChannelsTransformingGuy.rgbToYCbCr(extractRgb(source, x, y));
         }
 
-        private static int toRGBRange(float value)
+        public static byte[] extractRgb(Bitmap source, int x, int y)
         {
-            int val = (int)value;
-            return Math.Max(Math.Min(val, 255), 0);
+            return new byte[] {
+                        source.GetPixel(x, y).R,
+                        source.GetPixel(x, y).G,
+                        source.GetPixel(x, y).B
+                    };
+        }
+
+        private static Color asRgbColor(byte[] rgb)
+        {
+            return Color.FromArgb(rgb[0], rgb[1], rgb[2]);
         }
     }
 }

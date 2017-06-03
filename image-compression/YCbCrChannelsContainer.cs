@@ -1,6 +1,6 @@
 ﻿namespace image_compression
 {
-    public class YCbCrChannelsContainer : AbstractChannelsContainer
+    public class YCbCrChannelsContainer : AbstractChannelsContainer<float>
     {
         private const int Y = 0;
         private const int CB = 1;

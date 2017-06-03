@@ -1,6 +1,6 @@
 ﻿namespace image_compression
 {
-    public class RGBChannelsContainer : AbstractChannelsContainer
+    public class RGBChannelsContainer : AbstractChannelsContainer<byte>
     {
         private const int RED = 0;
         private const int GREEN = 1;
@@ -10,62 +10,62 @@
         {
         }
 
-        public void setRed(int n, int m, int value)
+        public void setRed(int n, int m, byte value)
         {
             setValueOfChannel(RED, n, m, value);
         }
 
-        public void setGreen(int n, int m, int value)
+        public void setGreen(int n, int m, byte value)
         {
             setValueOfChannel(GREEN, n, m, value);
         }
 
-        public void setBlue(int n, int m, int value)
+        public void setBlue(int n, int m, byte value)
         {
             setValueOfChannel(BLUE, n, m, value);
         }
 
-        public int getRed(int n, int m)
+        public byte getRed(int n, int m)
         {
-            return (int) getValueOfChannel(RED, n, m);
+            return (byte) getValueOfChannel(RED, n, m);
         }
 
-        public int getGreen(int n, int m)
+        public byte getGreen(int n, int m)
         {
-            return (int)getValueOfChannel(GREEN, n, m);
+            return (byte)getValueOfChannel(GREEN, n, m);
         }
 
-        public int getBlue(int n, int m)
+        public byte getBlue(int n, int m)
         {
-            return (int)getValueOfChannel(BLUE, n, m);
+            return (byte)getValueOfChannel(BLUE, n, m);
         }
 
-        public void setRed(float[][] values)
+        public void setRed(byte[][] values)
         {
             fillChannel(RED, values);
         }
 
-        public void setGreen(float[][] values)
+        public void setGreen(byte[][] values)
         {
             fillChannel(GREEN, values);
         }
 
-        public void setBlue(float[][] values)
+        public void setBlue(byte[][] values)
         {
             fillChannel(BLUE, values);
         }
 
-        public float[][] RedChannel()
+        public byte[][] RedChannel()
         {
             return getChannelAsMatrix(RED);
         }
 
-        public float[][] GreenChannel()
+        public byte[][] GreenChannel()
         {
             return getChannelAsMatrix(GREEN);
         }
 
-        public float[][] BlueChannel()
+        public byte[][] BlueChannel()
         {
             return getChannelAsMatrix(BLUE);
         }
